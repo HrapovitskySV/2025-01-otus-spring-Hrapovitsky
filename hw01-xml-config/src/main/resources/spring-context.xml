@@ -12,25 +12,25 @@
         </constructor-arg>
     </bean>
 
-    <bean id="TestRunnerServiceImpl" class="ru.otus.hw.service.TestRunnerServiceImpl">
-        <constructor-arg index="0" ref="TestServiceImpl"/>
+    <bean id="testRunnerServiceImpl" class="ru.otus.hw.service.TestRunnerServiceImpl">
+        <constructor-arg index="0" ref="testServiceImpl"/>
     </bean>
 
-    <bean id="AppProperties" class="ru.otus.hw.config.AppProperties">
+    <bean id="appProperties" class="ru.otus.hw.config.AppProperties">
         <constructor-arg index="0" value="questions.csv"/>
     </bean>
 
-    <bean id="TestFileNameProviderImpl" class="ru.otus.hw.config.TestFileNameProviderImpl">
-        <constructor-arg index="0" ref="AppProperties"/>
+    <bean id="testFileNameProviderImpl" class="ru.otus.hw.config.TestFileNameProviderImpl">
+        <constructor-arg index="0" ref="appProperties"/>
     </bean>
 
-    <bean id="CsvQuestionDao" class="ru.otus.hw.dao.CsvQuestionDao">
-        <constructor-arg name="fileNameProvider" ref="TestFileNameProviderImpl"/>
+    <bean id="csvQuestionDao" class="ru.otus.hw.dao.CsvQuestionDao">
+        <constructor-arg name="fileNameProvider" ref="testFileNameProviderImpl"/>
     </bean>
 
-    <bean id="TestServiceImpl" class="ru.otus.hw.service.TestServiceImpl">
-        <constructor-arg name="IOService" ref="ioService"/>
-        <constructor-arg name="CsvQuestionDao" ref="CsvQuestionDao"/>
+    <bean id="testServiceImpl" class="ru.otus.hw.service.TestServiceImpl">
+        <constructor-arg name="ioService" ref="ioService"/>
+        <constructor-arg name="csvQuestionDao" ref="csvQuestionDao"/>
     </bean>
 
 </beans>
