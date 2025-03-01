@@ -1,21 +1,17 @@
 package ru.otus.hw.service;
 
-import org.assertj.core.util.diff.ChangeDelta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 import org.mockito.Mockito;
-import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.dao.dto.QuestionToViewConverter;
 import ru.otus.hw.dao.dto.QuestionToViewConverterImpl;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,9 +35,9 @@ class TestServiceImplTest {
 
     @DisplayName("executeTest")
     @Test
-    void executeTestTest() throws IOException {
-        List<Question> questionList = new ArrayList<Question>();
-        List<Answer> answerList = new ArrayList<Answer>();
+    void executeTestTest()  {
+        List<Question> questionList = new ArrayList<>();
+        List<Answer> answerList = new ArrayList<>();
         Answer answer1=new Answer("Ответ1", true);
         answerList.add(answer1);
         Answer answer2=new Answer("Ответ3", true);

@@ -3,7 +3,6 @@ package ru.otus.hw.dao.dto;
 import lombok.AllArgsConstructor;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
-import ru.otus.hw.service.TestRunnerService;
 
 @AllArgsConstructor
 public class QuestionToViewConverterImpl implements QuestionToViewConverter {

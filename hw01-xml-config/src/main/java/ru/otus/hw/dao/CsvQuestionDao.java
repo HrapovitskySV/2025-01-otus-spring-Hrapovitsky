@@ -20,6 +20,7 @@ public class CsvQuestionDao implements QuestionDao {
     @Override
     public List<Question> findAll() {
         try (InputStream is = getClass().getClassLoader().getResourceAsStream(fileNameProvider.getTestFileName())) {
+            assert is != null;
             CsvToBean<QuestionDto> csvToBean = new CsvToBeanBuilder<QuestionDto>(new InputStreamReader(is))
                     .withType(QuestionDto.class)
                     .withSkipLines(1)
