@@ -29,7 +29,7 @@ class StreamsIOServiceTest {
         assertTrue(allWrittenLines.contains("test printLine"));
     }
 
-    @DisplayName("printFormattedLine")
+    @DisplayName("printFormattedLine1")
     @Test
     void printFormattedLineTest1() throws IOException {
         ByteArrayOutputStream bo = new ByteArrayOutputStream();
@@ -39,7 +39,9 @@ class StreamsIOServiceTest {
         String allWrittenLines = bo.toString();
         assertTrue(allWrittenLines.contains("test printFormattedLine"));
     }
-/*
+
+ /*
+
     @BeforeEach
     void setUp() {
         printStream = mock(PrintStream.class);
@@ -61,6 +63,6 @@ class StreamsIOServiceTest {
         streamsIOService2.printFormattedLine("test printFormattedLine", 10);
         verify(printStream, times(1)).printf("test printFormattedLine%n",10);
     }
-*/
 
+*/
 }

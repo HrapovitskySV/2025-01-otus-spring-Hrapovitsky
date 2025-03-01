@@ -8,6 +8,8 @@ import org.mockito.InOrder;
 import org.mockito.Mockito;
 import ru.otus.hw.dao.CsvQuestionDao;
 import ru.otus.hw.dao.QuestionDao;
+import ru.otus.hw.dao.dto.QuestionToViewConverter;
+import ru.otus.hw.dao.dto.QuestionToViewConverterImpl;
 import ru.otus.hw.domain.Answer;
 import ru.otus.hw.domain.Question;
 
@@ -25,12 +27,14 @@ class TestServiceImplTest {
     private TestServiceImpl testServiceImpl;
     private IOService ioService;
     private QuestionDao csvQuestionDao;
+    private QuestionToViewConverter questionToViewConverter;
 
     @BeforeEach
     void setUp() {
         ioService = mock(IOService.class);
         csvQuestionDao = mock(QuestionDao.class);
-        testServiceImpl= new TestServiceImpl(ioService, csvQuestionDao);
+        questionToViewConverter = new QuestionToViewConverterImpl();
+        testServiceImpl= new TestServiceImpl(ioService, csvQuestionDao, questionToViewConverter);
     }
 
     @DisplayName("executeTest")
@@ -51,7 +55,7 @@ class TestServiceImplTest {
         InOrder inOrder = Mockito.inOrder(ioService);
         inOrder.verify(ioService).printLine("");
         inOrder.verify(ioService).printFormattedLine("Please answer the questions below%n");
-        inOrder.verify(ioService).printLine(question.toString());
+        inOrder.verify(ioService).printLine(questionToViewConverter.convertToView(question));
 
         verify(csvQuestionDao, times(1)).findAll();
     }
