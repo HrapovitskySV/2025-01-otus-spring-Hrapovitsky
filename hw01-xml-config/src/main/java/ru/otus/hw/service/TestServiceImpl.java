@@ -29,7 +29,7 @@ public class TestServiceImpl implements TestService {
                 ioService.printLine(questionToViewConverter.convertToView(q));
             }
         } catch (QuestionReadException e) {
-            ioService.printLine("Не удалось прочитать вопросы.");
+            ioService.printLine("Couldn't read the questions.");
         }
     }
 }
