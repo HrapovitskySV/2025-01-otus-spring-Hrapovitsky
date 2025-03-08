@@ -9,6 +9,7 @@ import ru.otus.hw.exceptions.QuestionReadException;
 import java.util.List;
 
 @RequiredArgsConstructor
+@Service
 public class TestServiceImpl implements TestService {
 
     private final IOService ioService;

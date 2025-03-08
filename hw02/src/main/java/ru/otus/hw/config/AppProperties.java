@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Value;
 
 @Data
 @AllArgsConstructor
+@Configuration
 public class AppProperties implements TestConfig, TestFileNameProvider {
 
     @Value("$(test.rightAnswersCountToPass)")
