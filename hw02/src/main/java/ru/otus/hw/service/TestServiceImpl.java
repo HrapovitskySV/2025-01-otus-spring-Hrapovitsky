@@ -1,6 +1,7 @@
 package ru.otus.hw.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.dao.dto.QuestionToViewConverter;
 import ru.otus.hw.domain.Question;
@@ -12,6 +13,7 @@ import java.util.List;
 
 
 @RequiredArgsConstructor
+@Service
 public class TestServiceImpl implements TestService {
 
     private final IOService ioService;
@@ -46,18 +48,12 @@ public class TestServiceImpl implements TestService {
             for (Question q : questionList) {
                 ioService.printLine(questionToViewConverter.convertToView(q));
 
-                var answerStr = ioService.readStringWithPrompt("Enter the response number");
-                try {
-                    int answerNumber = Integer.parseInt(answerStr);
-                    if (answerNumber > 0 && answerNumber <= q.answers().size()) {
-                        testResult.applyAnswer(q, q.answers().get(answerNumber).isCorrect());
-                    } else {
-                        ioService.printLine("Entered number is not exist.");
-                    }
-
-                } catch (NumberFormatException e) {
-                    ioService.printLine("Error entering a number.");
+                int answerNumber = ioService.readIntWithPrompt("Enter the response number");
+                while (!(answerNumber > 0 && answerNumber <= q.answers().size())) {
+                    ioService.printLine("Entered number is not exist.");
+                    answerNumber = ioService.readIntWithPrompt("Enter the response number");
                 }
+                testResult.applyAnswer(q, q.answers().get(answerNumber).isCorrect());
             }
         } catch (QuestionReadException e) {
             ioService.printLine("Couldn't read the questions.");
