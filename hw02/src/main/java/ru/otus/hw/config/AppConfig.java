@@ -20,11 +20,4 @@ public class AppConfig {
     public Scanner getScanner() {
         return new Scanner(System.in);
     }
-
-    /*@Bean
-    public AppProperties getAppProperties() {
-        return new AppProperties();
-    }
-    */
-
 }
