@@ -11,7 +11,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>hw01-xml-cofig</module>
         <module>hw2</module>
     </modules>
 </project>

@@ -7,9 +7,14 @@ import org.springframework.context.annotation.PropertySource;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-@PropertySource("classpath:application.properties")
+
 @Configuration
 class AppConfig {
+
+    @Bean
+    public static AppProperties getAppProperties() {
+        return new AppProperties();
+    }
 
     @Bean
     public static PrintStream getPrintStream() {
