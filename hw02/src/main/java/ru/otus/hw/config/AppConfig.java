@@ -7,22 +7,24 @@ import org.springframework.context.annotation.PropertySource;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-
+@PropertySource("classpath:application.properties")
 @Configuration
-class AppConfig {
+public class AppConfig {
 
     @Bean
-    public static AppProperties getAppProperties() {
-        return new AppProperties();
-    }
-
-    @Bean
-    public static PrintStream getPrintStream() {
+    public PrintStream getPrintStream() {
         return System.out;
     }
 
     @Bean
-    public static Scanner getScanner() {
+    public Scanner getScanner() {
         return new Scanner(System.in);
     }
+
+    /*@Bean
+    public AppProperties getAppProperties() {
+        return new AppProperties();
+    }
+    */
+
 }

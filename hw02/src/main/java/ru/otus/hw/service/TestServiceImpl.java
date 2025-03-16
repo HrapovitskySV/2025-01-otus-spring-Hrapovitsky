@@ -53,7 +53,7 @@ public class TestServiceImpl implements TestService {
                     ioService.printLine("Entered number is not exist.");
                     answerNumber = ioService.readIntWithPrompt("Enter the response number");
                 }
-                testResult.applyAnswer(q, q.answers().get(answerNumber).isCorrect());
+                testResult.applyAnswer(q, q.answers().get(answerNumber-1).isCorrect());
             }
         } catch (QuestionReadException e) {
             ioService.printLine("Couldn't read the questions.");
