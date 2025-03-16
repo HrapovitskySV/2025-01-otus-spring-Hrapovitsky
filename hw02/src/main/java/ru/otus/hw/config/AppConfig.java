@@ -9,15 +9,15 @@ import java.util.Scanner;
 
 @PropertySource("classpath:application.properties")
 @Configuration
-public class AppConfig {
+class AppConfig {
 
     @Bean
-    public PrintStream getPrintStream() {
+    public static PrintStream getPrintStream() {
         return System.out;
     }
 
     @Bean
-    public Scanner getScanner() {
+    public static Scanner getScanner() {
         return new Scanner(System.in);
     }
 }
