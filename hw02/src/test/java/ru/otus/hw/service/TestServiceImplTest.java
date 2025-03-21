@@ -18,6 +18,7 @@ import java.util.List;
 
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 class TestServiceImplTest {
     private TestServiceImpl testServiceImpl;
@@ -29,7 +30,7 @@ class TestServiceImplTest {
     void setUp() {
         ioService = mock(IOService.class);
         csvQuestionDao = mock(QuestionDao.class);
-        questionToViewConverter = new QuestionToViewConverterImpl();
+        questionToViewConverter = mock(QuestionToViewConverter.class);
         testServiceImpl= new TestServiceImpl(ioService, csvQuestionDao, questionToViewConverter);
     }
 
@@ -51,7 +52,7 @@ class TestServiceImplTest {
         InOrder inOrder = Mockito.inOrder(ioService);
         inOrder.verify(ioService).printLine("");
         inOrder.verify(ioService).printFormattedLine("Please answer the questions below%n");
-        inOrder.verify(ioService).printLine(questionToViewConverter.convertToView(question));
+        verify(questionToViewConverter, times(1)).convertToView(question);
 
         verify(csvQuestionDao, times(1)).findAll();
     }
