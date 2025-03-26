@@ -20,9 +20,9 @@ public class Book {
 
     private List<Genre> genres;
 
-    public void addGenre(Genre genre){
-        if (Objects.isNull(genres)){
-            genres=new ArrayList<Genre>();
+    public void addGenre(Genre genre) {
+        if (Objects.isNull(genres)) {
+            genres = new ArrayList<Genre>();
         }
         genres.add(genre);
     }

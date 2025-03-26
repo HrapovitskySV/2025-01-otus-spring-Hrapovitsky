@@ -17,7 +17,12 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Objects;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Repository
@@ -25,16 +30,8 @@ import java.util.stream.Collectors;
 public class JdbcBookRepository implements BookRepository {
 
     private final NamedParameterJdbcOperations namedParameterJdbcOperations;
+
     private final GenreRepository genreRepository;
-/*
-    public JdbcBookRepository(NamedParameterJdbcOperations namedParameterJdbcOperations, GenreRepository genreRepository) {
-        this.namedParameterJdbcOperations = namedParameterJdbcOperations;
-        this.genreRepository = genreRepository;
-    }
-
- */
-
-
 
 
     @Override
@@ -42,7 +39,8 @@ public class JdbcBookRepository implements BookRepository {
         Map<String, Object> params = Collections.singletonMap("id", id);
 
         return Optional.ofNullable(namedParameterJdbcOperations.query("select " +
-                "b.id, b.title, b.author_id as author_id, bg.genre_id, a.full_name as author_full_name, g.name as genre_name " +
+                "b.id, b.title, b.author_id as author_id, bg.genre_id," +
+                "a.full_name as author_full_name, g.name as genre_name " +
                 "from books as b" +
                 "   left join authors as a on b.author_id=a.id" +
                 "   left join books_genres as bg " +
@@ -91,17 +89,11 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private List<BookGenreRelation> getAllGenreRelations() {
-        return namedParameterJdbcOperations.query("select book_id, genre_id from books_genres", Map.of(), new BookGenreRelationRowMapper());
 
-        /*
-        List<BookGenreRelation> bookGenreRelationList=new ArrayList<BookGenreRelation>();
-        SqlRowSet sqlRowSet = namedParameterJdbcOperations.queryForRowSet("select book_id, genre_id from books_genres", Map.of());
-        while (sqlRowSet.next()){
-            bookGenreRelationList.add(new BookGenreRelation(sqlRowSet.getLong("book_id"), sqlRowSet.getLong("genre_id")));
-        }
-        return bookGenreRelationList;
-*/
-
+        return namedParameterJdbcOperations.query(
+                "select book_id, genre_id from books_genres"
+                , Map.of(), new BookGenreRelationRowMapper()
+        );
 
     }
 
@@ -114,7 +106,7 @@ public class JdbcBookRepository implements BookRepository {
         Map<Long, Genre> mapGenres = genres.stream()
                 .collect(Collectors.toMap(Genre::getId, genre -> genre));
 
-        for (BookGenreRelation bookGenreRelation:relations){
+        for (BookGenreRelation bookGenreRelation:relations) {
             Book book = mapBooks.get(bookGenreRelation.bookId);
             Genre genre = mapGenres.get(bookGenreRelation.genreId);
 
@@ -122,6 +114,7 @@ public class JdbcBookRepository implements BookRepository {
 
         }
     }
+
     @Transactional
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
@@ -131,9 +124,6 @@ public class JdbcBookRepository implements BookRepository {
 
         namedParameterJdbcOperations.update("insert into books ( title, author_id) values (:title, :author_id)",
                 params, keyHolder, new String[]{"id"});
-        //...
-
-        //noinspection DataFlowIssue
 
         book.setId(keyHolder.getKeyAs(Long.class));
         batchInsertGenresRelationsFor(book);
@@ -142,8 +132,8 @@ public class JdbcBookRepository implements BookRepository {
 
     @Transactional
     private Book update(Book book) {
-        if ( Objects.isNull(findById(book.getId()))) {
-            throw new EntityNotFoundException("Book withs id "+findById(book.getId())+" not exists");
+        if (Objects.isNull(findById(book.getId()))) {
+            throw new EntityNotFoundException(String.format("Book withs id %s not exists",findById(book.getId())));
         } else {
             MapSqlParameterSource params = new MapSqlParameterSource();
             params.addValue("id", book.getId());
@@ -162,19 +152,6 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private void batchInsertGenresRelationsFor(Book book) {
-        // Использовать метод batchUpdate
-
-        /*
-        List<Map<String, Object>> l = new ArrayList<Map<String, Object>>();
-        for(Genre genre: book.getGenres()){
-            l.add(Map.of("book_id", book.getId(),"genre_id", genre.getId()));
-        }
-
-        Map<String, Object>[] batchVales = new Map[l.size()];
-        batchVales=l.toArray(batchVales);
-
-         */
-
         SqlParameterSource[] batchVales = book.getGenres().stream()
                 .map(genre -> new MapSqlParameterSource()
                         .addValue("book_id", book.getId())
@@ -201,21 +178,12 @@ public class JdbcBookRepository implements BookRepository {
         @Override
         public Book mapRow(ResultSet rs, int rowNum) throws SQLException {
             List<Genre> genres = new ArrayList<>();
-            /*
-            Genre genre=null;
-            long genre_id = rs.getLong("genre_id");
 
-            if (genre_id != 0) {
-                String genre_name = rs.getString("genre_name");
-                genre = new Genre(genre_id, genre_name);
-            }
-             */
-
-            Author author=null;
-            long author_id = rs.getLong("author_id");
-            if (author_id != 0) {
-                String author_full_name = rs.getString("author_full_name");
-                author = new Author(author_id, author_full_name);
+            Author author = null;
+            long authorId = rs.getLong("author_id");
+            if (authorId != 0) {
+                String authorFullName = rs.getString("author_full_name");
+                author = new Author(authorId, authorFullName);
             }
 
             long id = rs.getLong("id");
@@ -232,19 +200,19 @@ public class JdbcBookRepository implements BookRepository {
         @Override
         public Book extractData(ResultSet rs) throws SQLException, DataAccessException {
             Book book = null;
-            List<Genre> genres= new ArrayList<Genre>();
+            List<Genre> genres = new ArrayList<Genre>();
 
             while (rs.next()) {
-                if (rs.isFirst()){
-                    book=new Book();
+                if (rs.isFirst()) {
+                    book = new Book();
                     book.setId(rs.getLong("id"));
                     book.setTitle(rs.getString("title"));
                     book.setGenres(genres);
 
-                    long author_id = rs.getLong("author_id");
-                    if (author_id != 0) {
-                        String author_full_name = rs.getString("author_full_name");
-                        book.setAuthor(new Author(author_id, author_full_name));
+                    long authorId = rs.getLong("author_id");
+                    if (authorId != 0) {
+                        String authorFullName = rs.getString("author_full_name");
+                        book.setAuthor(new Author(authorId, authorFullName));
                     }
                 }
                 genres.add(new Genre(rs.getLong("genre_id"), rs.getString("genre_name")));
