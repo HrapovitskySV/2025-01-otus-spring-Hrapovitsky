@@ -1,30 +1,31 @@
 package ru.otus.hw.dao;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.otus.hw.config.TestFileNameProvider;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.exceptions.QuestionReadException;
-import ru.otus.hw.service.IOService;
-import ru.otus.hw.service.TestServiceImpl;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 class CsvQuestionDaoTest {
 
     private CsvQuestionDao csvQuestionDao;
+    
     private TestFileNameProvider fileNameProvider;
 
     @BeforeEach
     void setUp() {
         fileNameProvider = mock(TestFileNameProvider.class);
-        csvQuestionDao= new CsvQuestionDao(fileNameProvider);
+        csvQuestionDao = new CsvQuestionDao(fileNameProvider);
     }
 
     @DisplayName("Test on QuestionReadException")

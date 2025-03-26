@@ -6,8 +6,8 @@ import ru.otus.hw.dao.QuestionDao;
 import ru.otus.hw.dao.dto.QuestionToViewConverter;
 import ru.otus.hw.domain.Question;
 import ru.otus.hw.domain.Student;
-import ru.otus.hw.exceptions.QuestionReadException;
 import ru.otus.hw.domain.TestResult;
+import ru.otus.hw.exceptions.QuestionReadException;
 
 import java.util.List;
 
@@ -24,19 +24,6 @@ public class TestServiceImpl implements TestService {
 
 
 
-    @Override
-    public void executeTest() {
-        ioService.printLine("");
-        ioService.printFormattedLine("Please answer the questions below%n");
-        try {
-            List<Question> questionList = csvQuestionDao.findAll();
-            for (Question q : questionList) {
-                ioService.printLine(questionToViewConverter.convertToView(q));
-            }
-        } catch (QuestionReadException e) {
-            ioService.printLine("Couldn't read the questions.");
-        }
-    }
 
     @Override
     public TestResult executeTestFor(Student student) {
@@ -53,7 +40,7 @@ public class TestServiceImpl implements TestService {
                     ioService.printLine("Entered number is not exist.");
                     answerNumber = ioService.readIntWithPrompt("Enter the response number");
                 }
-                testResult.applyAnswer(q, q.answers().get(answerNumber-1).isCorrect());
+                testResult.applyAnswer(q, q.answers().get(answerNumber - 1).isCorrect());
             }
         } catch (QuestionReadException e) {
             ioService.printLine("Couldn't read the questions.");

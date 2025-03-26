@@ -1,7 +1,5 @@
 package ru.otus.hw.service;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +15,8 @@ public class StreamsIOService implements IOService {
 
     private final Scanner scanner;
 
-    public StreamsIOService(@Value("#{T(java.lang.System).out}") PrintStream printStream, @Value("#{T(java.lang.System).in}") InputStream inputStream) {
+    public StreamsIOService(@Value("#{T(java.lang.System).out}") PrintStream printStream,
+                            @Value("#{T(java.lang.System).in}") InputStream inputStream) {
         this.printStream = printStream;
         this.scanner = new Scanner(inputStream);
     }

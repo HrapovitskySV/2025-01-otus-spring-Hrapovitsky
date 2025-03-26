@@ -7,7 +7,5 @@ import ru.otus.hw.domain.TestResult;
 @Service
 public interface TestService {
 
-    void executeTest();
-
     TestResult executeTestFor(Student student);
 }
