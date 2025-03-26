@@ -4,3 +4,4 @@
 *.mvn
 
 target/
+hw01-xml-config/
