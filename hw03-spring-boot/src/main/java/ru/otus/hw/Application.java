@@ -9,7 +9,7 @@ import ru.otus.hw.service.TestRunnerService;
 public class Application {
     public static void main(String[] args) {
 
-        ApplicationContext context=SpringApplication.run(Application.class, args);
+        ApplicationContext context = SpringApplication.run(Application.class, args);
         var testRunnerService = context.getBean(TestRunnerService.class);
         testRunnerService.run();
 

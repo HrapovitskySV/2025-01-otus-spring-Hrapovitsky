@@ -30,7 +30,10 @@ public class TestServiceImpl implements TestService {
         for (var q: questions) {
             ioService.printLine(questionToViewConverter.convertToView(q));
 
-            int answerNumber = ioService.readIntForRangeWithPromptLocalized(1,q.answers().size(),"TestService.enter.the.response.number","TestService.error.entering.number");
+            int answerNumber = ioService.readIntForRangeWithPromptLocalized(1,
+                                                                            q.answers().size(),
+                                                                            "TestService.enter.the.response.number",
+                                                                            "TestService.error.entering.number");
             testResult.applyAnswer(q, q.answers().get(answerNumber - 1).isCorrect());
         }
         return testResult;
