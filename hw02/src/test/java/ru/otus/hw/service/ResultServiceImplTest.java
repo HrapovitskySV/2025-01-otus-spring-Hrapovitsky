@@ -9,20 +9,19 @@ import ru.otus.hw.config.AppProperties;
 import ru.otus.hw.domain.Student;
 import ru.otus.hw.domain.TestResult;
 
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 
 class ResultServiceImplTest {
-    private TestServiceImpl testServiceImpl;
-
     private IOService ioService;
 
     private ResultServiceImpl resultServiceImpl;
 
-    //private QuestionToViewConverter questionToViewConverter;
+    private AppProperties appProperties;
 
     @BeforeEach
     void setUp() {
-        AppProperties appProperties = new AppProperties(3, "questions_test.csv");
+        appProperties = mock(AppProperties.class);
         ioService = mock(IOService.class);
         resultServiceImpl = new ResultServiceImpl(appProperties, ioService);
     }
@@ -30,6 +29,8 @@ class ResultServiceImplTest {
     @DisplayName("showResult")
     @Test
     void showResultTest()  {
+        given(appProperties.getRightAnswersCountToPass()).willReturn(3);
+        given(appProperties.getTestFileName()).willReturn("questions_test.csv");
 
         Student student = new Student("Sergey","Khrapovitsky");
         TestResult testResult = new TestResult(student);

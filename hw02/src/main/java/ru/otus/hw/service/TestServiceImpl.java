@@ -22,9 +22,6 @@ public class TestServiceImpl implements TestService {
 
     private final QuestionToViewConverter questionToViewConverter;
 
-
-
-
     @Override
     public TestResult executeTestFor(Student student) {
         var testResult = new TestResult(student);

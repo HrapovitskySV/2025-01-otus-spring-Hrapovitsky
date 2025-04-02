@@ -15,8 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 class TestServiceImplTest {
@@ -38,9 +38,8 @@ class TestServiceImplTest {
         testServiceImpl = new TestServiceImpl(ioService, csvQuestionDao, questionToViewConverter);
     }
 
-
-    @Test
     @DisplayName("executeTestFor")
+    @Test
     void executeTestForTest()  {
 
         List<Question> questionList = new ArrayList<>();
