@@ -9,7 +9,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcOperations;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
@@ -17,7 +16,6 @@ import ru.otus.hw.models.Genre;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Objects;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
@@ -68,7 +66,6 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     @Override
-    @Transactional
     public void deleteById(long id) {
         Map<String, Object> params = Collections.singletonMap("id", id);
         namedParameterJdbcOperations.update(
@@ -115,7 +112,6 @@ public class JdbcBookRepository implements BookRepository {
         }
     }
 
-    @Transactional
     private Book insert(Book book) {
         var keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -130,23 +126,22 @@ public class JdbcBookRepository implements BookRepository {
         return book;
     }
 
-    @Transactional
     private Book update(Book book) {
-        if (Objects.isNull(findById(book.getId()))) {
-            throw new EntityNotFoundException(String.format("Book withs id %s not exists",findById(book.getId())));
-        } else {
-            MapSqlParameterSource params = new MapSqlParameterSource();
-            params.addValue("id", book.getId());
-            params.addValue("title", book.getTitle());
-            params.addValue("author_id", book.getAuthor().getId());
+       MapSqlParameterSource params = new MapSqlParameterSource();
+       params.addValue("id", book.getId());
+       params.addValue("title", book.getTitle());
+       params.addValue("author_id", book.getAuthor().getId());
 
-            namedParameterJdbcOperations.update("update books " +
+       int updateRowCount = namedParameterJdbcOperations.update("update books " +
                     "set title=:title, author_id=:author_id " +
                     "where id = :id",params);
-        }
 
-        removeGenresRelationsFor(book);
-        batchInsertGenresRelationsFor(book);
+       if (updateRowCount == 0) {
+           throw new EntityNotFoundException(String.format("Book withs id %s not exists",findById(book.getId())));
+       }
+
+       removeGenresRelationsFor(book);
+       batchInsertGenresRelationsFor(book);
 
         return book;
     }
@@ -192,8 +187,6 @@ public class JdbcBookRepository implements BookRepository {
         }
     }
 
-    // Использовать для findById
-    @SuppressWarnings("ClassCanBeRecord")
     @RequiredArgsConstructor
     private static class BookResultSetExtractor implements ResultSetExtractor<Book> {
 
