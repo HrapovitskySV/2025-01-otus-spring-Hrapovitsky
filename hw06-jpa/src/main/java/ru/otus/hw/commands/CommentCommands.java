@@ -18,21 +18,14 @@ public class CommentCommands {
     @ShellMethod(value = "Find comments by book", key = "cbb")
     public String findCommentsByBook(Long bookId) {
         return commentService.findByBookId(bookId).stream()
-                .map(commentConverter::commentToString)
+                .map(commentConverter::commentDtoToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 
     @ShellMethod(value = "Find comments by id", key = "cbi")
     public String findCommentById(Long id) {
         return commentService.findById(id).stream()
-                .map(commentConverter::commentToString)
-                .collect(Collectors.joining("," + System.lineSeparator()));
-    }
-
-    @ShellMethod(value = "Find all comments", key = "ac")
-    public String findAllComment() {
-        return commentService.findAll().stream()
-                .map(commentConverter::commentToString)
+                .map(commentConverter::commentDtoToString)
                 .collect(Collectors.joining("," + System.lineSeparator()));
     }
 }

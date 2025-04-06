@@ -15,7 +15,7 @@ import java.util.Set;
 public class JdbcGenreRepository implements GenreRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
 
     @Override

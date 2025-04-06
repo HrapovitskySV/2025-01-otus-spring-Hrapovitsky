@@ -2,8 +2,10 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Comment;
+import ru.otus.hw.models.dto.CommentDto;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
@@ -17,20 +19,19 @@ public class CommentServiceImpl implements CommentService {
 
     private final BookRepository bookRepository;
 
+    private final CommentConverter commentConverter;
+
 
     @Override
-    public Optional<Comment> findById(long id) {
-        return commentRepository.findById(id);
+    public Optional<CommentDto> findById(long id) {
+        Optional<Comment> oComment = commentRepository.findById(id);
+        return oComment.map(commentConverter::toDto);
     }
 
     @Override
-    public List<Comment> findAll() {
-        return commentRepository.findAll();
-    }
-
-    @Override
-    public List<Comment> findByBookId(Long bookId) {
-        return commentRepository.findByBookId(bookId);
+    public List<CommentDto> findByBookId(Long bookId) {
+        var comments = commentRepository.findByBookId(bookId);
+        return comments.stream().map(commentConverter::toDto).toList();
     }
 
     @Override

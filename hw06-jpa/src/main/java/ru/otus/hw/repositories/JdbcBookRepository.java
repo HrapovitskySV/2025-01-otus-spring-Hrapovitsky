@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphType.FETCH;
@@ -16,21 +17,14 @@ import static org.springframework.data.jpa.repository.EntityGraph.EntityGraphTyp
 public class JdbcBookRepository implements BookRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     @Override
     public Optional<Book> findById(long id) {
         EntityGraph<?> entityGraph = em.getEntityGraph("genres-author-entity-graph");
-        var query = em.createQuery("select b from Book b where b.id = :book_id", Book.class);
-        query.setHint(FETCH.getKey(),entityGraph);
-
-        query.setParameter("book_id",id);
-        var r = query.getResultList();
-        if (r.isEmpty()) {
-            return Optional.empty();
-        } else {
-            return Optional.ofNullable(r.get(0));
-        }
+        Map<String, Object> properties = Map.of("javax.persistence.fetchgraph", entityGraph);
+        Book book = em.find(Book.class,id,properties);
+        return Optional.ofNullable(book);
     }
 
     @Override
@@ -57,7 +51,13 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private Book insert(Book book) {
-        em.persist(book);
+        try {
+            em.persist(book);
+        } catch (RuntimeException e) {
+            System.out.println(e.fillInStackTrace().getMessage());
+            throw new RuntimeException(e);
+        }
+
         return book;
     }
 

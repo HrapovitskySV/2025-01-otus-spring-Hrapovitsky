@@ -14,7 +14,7 @@ import java.util.Optional;
 public class JdbcAuthorRepository implements AuthorRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
 
     @Override

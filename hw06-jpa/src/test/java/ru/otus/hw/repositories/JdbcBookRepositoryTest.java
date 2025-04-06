@@ -1,29 +1,25 @@
 package ru.otus.hw.repositories;
 
-import org.hibernate.annotations.Comments;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.context.annotation.Import;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.Genre;
-
-import java.util.AbstractList;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@DisplayName("Репозиторий на основе Jdbc для работы с книгами ")
+@DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
 @Import({JdbcBookRepository.class, JdbcGenreRepository.class, JdbcCommentRepository.class})
 class JdbcBookRepositoryTest {
@@ -41,6 +37,10 @@ class JdbcBookRepositoryTest {
     private JdbcCommentRepository repositoryComment;
 
     private List<Comment> dbComments;
+
+    @Autowired
+    TestEntityManager tem;
+
 
     @BeforeEach
     void setUp() {
@@ -86,7 +86,10 @@ class JdbcBookRepositoryTest {
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(repositoryJdbc.findById(returnedBook.getId()))
+
+        var actualBook = Optional.ofNullable(tem.find(Book.class, returnedBook.getId()));
+
+        assertThat(actualBook)
                 .isPresent()
                 .get()
                 .isEqualTo(returnedBook);
@@ -98,7 +101,9 @@ class JdbcBookRepositoryTest {
         var expectedBook = new Book(1L, "BookTitle_10500", dbAuthors.get(2),
                 List.of(dbGenres.get(4), dbGenres.get(5)));
 
-        assertThat(repositoryJdbc.findById(expectedBook.getId()))
+        var actualBook = Optional.ofNullable(tem.find(Book.class, expectedBook.getId()));
+
+        assertThat(actualBook)
                 .isPresent()
                 .get()
                 .isNotEqualTo(expectedBook);
@@ -108,7 +113,8 @@ class JdbcBookRepositoryTest {
                 .matches(book -> book.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedBook);
 
-        assertThat(repositoryJdbc.findById(returnedBook.getId()))
+        actualBook = Optional.ofNullable(tem.find(Book.class, returnedBook.getId()));
+        assertThat(actualBook)
                 .isPresent()
                 .get()
                 .isEqualTo(returnedBook);
@@ -117,9 +123,13 @@ class JdbcBookRepositoryTest {
     @DisplayName("должен удалять книгу по id ")
     @Test
     void shouldDeleteBook() {
-        assertThat(repositoryJdbc.findById(1L)).isPresent();
+        var actualBook = Optional.ofNullable(tem.find(Book.class, 1L));
+        assertThat(actualBook).isPresent();
+
         repositoryJdbc.deleteById(1L);
-        assertThat(repositoryJdbc.findById(1L)).isEmpty();
+
+        actualBook = Optional.ofNullable(tem.find(Book.class, 1L));
+        assertThat(actualBook).isEmpty();
     }
 
 
@@ -137,16 +147,6 @@ class JdbcBookRepositoryTest {
         }
     }
 
-    @DisplayName("должен загружать список всех комментариев")
-    @Test
-    void shouldReturnCorrectCommentsList() {
-        var actualComments = repositoryComment.findAll();
-        var expectedComments = dbComments;
-
-        assertThat(actualComments).containsExactlyElementsOf(expectedComments);
-        actualComments.forEach(System.out::println);
-    }
-
     @DisplayName("должен сохранять новый комментарий")
     @Test
     void shouldSaveNewComment() {
@@ -156,7 +156,9 @@ class JdbcBookRepositoryTest {
                 .matches(comment -> comment.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
 
-        assertThat(repositoryComment.findById(returnedComment.getId()))
+        var actualComment = Optional.ofNullable(tem.find(Comment.class, returnedComment.getId()));
+
+        assertThat(actualComment)
                 .isPresent()
                 .get()
                 .isEqualTo(returnedComment);
@@ -169,7 +171,9 @@ class JdbcBookRepositoryTest {
 
         var expectedComment = new Comment(id, dbBooks.get(0), "Comment_10500");
 
-        assertThat(repositoryComment.findById(expectedComment.getId()))
+        var actualComment = Optional.ofNullable(tem.find(Comment.class, id));
+
+        assertThat(actualComment)
                 .isPresent()
                 .get()
                 .isNotEqualTo(expectedComment);
@@ -179,7 +183,9 @@ class JdbcBookRepositoryTest {
                 .matches(comment -> comment.getId() > 0)
                 .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
 
-        assertThat(repositoryComment.findById(returnedComment.getId()))
+
+        actualComment = Optional.ofNullable(tem.find(Comment.class, id));
+        assertThat(actualComment)
                 .isPresent()
                 .get()
                 .isEqualTo(returnedComment);
@@ -189,9 +195,13 @@ class JdbcBookRepositoryTest {
     @Test
     void shouldDeleteComment() {
         long id = dbComments.get(0).getId();
-        assertThat(repositoryComment.findById(id)).isPresent();
+        var actualComment = Optional.ofNullable(tem.find(Comment.class, id));
+        assertThat(actualComment).isPresent();
+
         repositoryComment.deleteById(id);
-        assertThat(repositoryComment.findById(id)).isEmpty();
+
+        actualComment = Optional.ofNullable(tem.find(Comment.class, id));
+        assertThat(actualComment).isEmpty();
     }
 
     private static List<Author> getDbAuthors() {

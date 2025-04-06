@@ -13,7 +13,7 @@ import java.util.List;
 public class JdbcCommentRepository implements CommentRepository {
 
     @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
 
     @Override
@@ -29,11 +29,6 @@ public class JdbcCommentRepository implements CommentRepository {
         return query.getResultList();
     }
 
-    @Override
-    public List<Comment> findAll() {
-        var query = em.createQuery("select c from Comment c", Comment.class);
-        return query.getResultList();
-    }
 
     @Override
     public Comment save(Comment comment) {
