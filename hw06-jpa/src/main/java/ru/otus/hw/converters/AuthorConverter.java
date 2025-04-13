@@ -2,6 +2,9 @@ package ru.otus.hw.converters;
 
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.Genre;
+import ru.otus.hw.models.dto.AuthorDto;
+import ru.otus.hw.models.dto.GenreDto;
 
 import java.util.Objects;
 
@@ -12,5 +15,20 @@ public class AuthorConverter {
             return "";
         }
         return "Id: %d, FullName: %s".formatted(author.getId(), author.getFullName());
+    }
+
+    public String authorDtoToString(AuthorDto author) {
+        if (Objects.isNull(author)) {
+               return "";
+        }
+            return "Id: %d, FullName: %s".formatted(author.getId(), author.getFullName());
+    }
+
+    public AuthorDto toDto(Author author) {
+        var authorDto = new AuthorDto();
+        authorDto.setId(author.getId());
+        authorDto.setFullName(author.getFullName());
+
+        return authorDto;
     }
 }

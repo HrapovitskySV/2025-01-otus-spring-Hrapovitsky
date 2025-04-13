@@ -34,7 +34,7 @@ public class BookConverter {
         return "Id: %d, title: %s, author: {%s}, genres: [%s]".formatted(
                 book.getId(),
                 book.getTitle(),
-                authorConverter.authorToString(book.getAuthor()),
+                authorConverter.authorDtoToString(book.getAuthor()),
                 genresString);
     }
 
@@ -42,7 +42,7 @@ public class BookConverter {
         var bookDto = new BookDto();
         bookDto.setId(book.getId());
         bookDto.setTitle(book.getTitle());
-        bookDto.setAuthor(book.getAuthor());
+        bookDto.setAuthor(authorConverter.toDto(book.getAuthor()));
         bookDto.setGenres(book.getGenres().stream().map(genreConverter::toDto).toList());
         return bookDto;
     }

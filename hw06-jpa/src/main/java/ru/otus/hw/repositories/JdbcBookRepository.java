@@ -22,7 +22,7 @@ public class JdbcBookRepository implements BookRepository {
     @Override
     public Optional<Book> findById(long id) {
         EntityGraph<?> entityGraph = em.getEntityGraph("genres-author-entity-graph");
-        Map<String, Object> properties = Map.of("javax.persistence.fetchgraph", entityGraph);
+        Map<String, Object> properties = Map.of(FETCH.getKey(), entityGraph);
         Book book = em.find(Book.class,id,properties);
         return Optional.ofNullable(book);
     }
@@ -51,13 +51,7 @@ public class JdbcBookRepository implements BookRepository {
     }
 
     private Book insert(Book book) {
-        try {
-            em.persist(book);
-        } catch (RuntimeException e) {
-            System.out.println(e.fillInStackTrace().getMessage());
-            throw new RuntimeException(e);
-        }
-
+        em.persist(book);
         return book;
     }
 

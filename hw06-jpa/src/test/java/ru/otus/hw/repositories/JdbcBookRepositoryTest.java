@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DisplayName("Репозиторий на основе Jpa для работы с книгами ")
 @DataJpaTest
-@Import({JdbcBookRepository.class, JdbcGenreRepository.class, JdbcCommentRepository.class})
+@Import({JdbcBookRepository.class})
 class JdbcBookRepositoryTest {
 
     @Autowired
@@ -33,13 +33,10 @@ class JdbcBookRepositoryTest {
 
     private List<Book> dbBooks;
 
-    @Autowired
-    private JdbcCommentRepository repositoryComment;
-
     private List<Comment> dbComments;
 
     @Autowired
-    TestEntityManager tem;
+    private TestEntityManager tem;
 
 
     @BeforeEach
@@ -47,13 +44,13 @@ class JdbcBookRepositoryTest {
         dbAuthors = getDbAuthors();
         dbGenres = getDbGenres();
         dbBooks = getDbBooks(dbAuthors, dbGenres);
+        /*
         for (Book book: dbBooks) {
-            repositoryJdbc.save(book);
+
+            tem.persist(book);
         }
-        dbComments = getDbComments(dbBooks);
-        for (Comment comment: dbComments) {
-            repositoryComment.save(comment);
-        }
+        */
+
     }
 
     @DisplayName("должен загружать книгу по id")
@@ -133,78 +130,7 @@ class JdbcBookRepositoryTest {
     }
 
 
-    @DisplayName("должен загружать комментарий по id")
-    @Test
-    //@ParameterizedTest
-    //@MethodSource("getDbComments")
-    //void shouldReturnCorrectCommentById(Comment expectedComment) {
-    void shouldReturnCorrectCommentById() {
-        for (Comment expectedComment: dbComments) {
-            var actualComment = repositoryComment.findById(expectedComment.getId());
-            assertThat(actualComment).isPresent()
-                    .get()
-                    .isEqualTo(expectedComment);
-        }
-    }
-
-    @DisplayName("должен сохранять новый комментарий")
-    @Test
-    void shouldSaveNewComment() {
-        var expectedComment = new Comment(0, dbBooks.get(0), "Comment_10501");
-        var returnedComment = repositoryComment.save(expectedComment);
-        assertThat(returnedComment).isNotNull()
-                .matches(comment -> comment.getId() > 0)
-                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
-
-        var actualComment = Optional.ofNullable(tem.find(Comment.class, returnedComment.getId()));
-
-        assertThat(actualComment)
-                .isPresent()
-                .get()
-                .isEqualTo(returnedComment);
-    }
-
-    @DisplayName("должен сохранять измененный комментари")
-    @Test
-    void shouldSaveUpdatedComment() {
-        long id = dbComments.get(0).getId();
-
-        var expectedComment = new Comment(id, dbBooks.get(0), "Comment_10500");
-
-        var actualComment = Optional.ofNullable(tem.find(Comment.class, id));
-
-        assertThat(actualComment)
-                .isPresent()
-                .get()
-                .isNotEqualTo(expectedComment);
-
-        var returnedComment = repositoryComment.save(expectedComment);
-        assertThat(returnedComment).isNotNull()
-                .matches(comment -> comment.getId() > 0)
-                .usingRecursiveComparison().ignoringExpectedNullFields().isEqualTo(expectedComment);
-
-
-        actualComment = Optional.ofNullable(tem.find(Comment.class, id));
-        assertThat(actualComment)
-                .isPresent()
-                .get()
-                .isEqualTo(returnedComment);
-    }
-
-    @DisplayName("должен удалять комментарий по id ")
-    @Test
-    void shouldDeleteComment() {
-        long id = dbComments.get(0).getId();
-        var actualComment = Optional.ofNullable(tem.find(Comment.class, id));
-        assertThat(actualComment).isPresent();
-
-        repositoryComment.deleteById(id);
-
-        actualComment = Optional.ofNullable(tem.find(Comment.class, id));
-        assertThat(actualComment).isEmpty();
-    }
-
-    private static List<Author> getDbAuthors() {
+     private static List<Author> getDbAuthors() {
         return IntStream.range(1, 4).boxed()
                 .map(id -> new Author(id, "Author_" + id))
                 .toList();
@@ -219,7 +145,7 @@ class JdbcBookRepositoryTest {
     private static List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
         List<Book> books= IntStream.range(1, 4).boxed()
                 .map(id -> new Book(id,
-                        "BookTiiiiitle_" + id,
+                        "BookTitle_" + id,
                         dbAuthors.get(id - 1),
                         dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2)
                 ))

@@ -7,7 +7,7 @@ import ru.otus.hw.models.Book;
 public class CommentDto {
     private long id;
 
-    private Book book;
+    private BookDto book;
 
     private String comment;
 }

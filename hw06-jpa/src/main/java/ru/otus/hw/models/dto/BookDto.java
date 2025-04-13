@@ -10,7 +10,7 @@ public class BookDto {
 
     private String title;
 
-    private Author author;
+    private AuthorDto author;
 
     private List<GenreDto> genres;
 }

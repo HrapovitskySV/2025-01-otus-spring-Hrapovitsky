@@ -8,7 +8,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import ru.otus.hw.converters.AuthorConverter;
+import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.CommentConverter;
+import ru.otus.hw.converters.GenreConverter;
+import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.dto.CommentDto;
 import ru.otus.hw.repositories.JdbcBookRepository;
 import ru.otus.hw.repositories.JdbcCommentRepository;
@@ -17,39 +21,25 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DisplayName("Сервис для работы с комментариями ")
 @DataJpaTest
-@Import({JdbcBookRepository.class, JdbcCommentRepository.class, CommentConverter.class})
+@Import({CommentServiceImpl.class, JdbcBookRepository.class, JdbcCommentRepository.class, CommentConverter.class, BookConverter.class, AuthorConverter.class, GenreConverter.class})
 @Transactional(propagation = Propagation.NEVER)
 class CommentServiceImplTest {
 
-
+    @Autowired
     private CommentService commentService;
-
-    @Autowired
-    private JdbcCommentRepository commentRepository;
-
-    @Autowired
-    private JdbcBookRepository bookRepository;
-
-    @Autowired
-    private CommentConverter commentConverter;
-
-    @BeforeEach
-    void setUp() {
-        commentService = new CommentServiceImpl(commentRepository, bookRepository,  commentConverter);
-    }
 
     @DisplayName("У комментария должен получить книгу")
     @Test
     void findById() {
         var actualComment = commentService.findById(1L);
-        assertDoesNotThrow(() -> actualComment.get().getBook());
+        assertDoesNotThrow(() -> actualComment.get().getBook().getTitle());
     }
 
     @Test
     void findByBookId() {
         var actualComments = commentService.findByBookId(1L);
 
-        assertDoesNotThrow(() -> actualComments.stream().map(CommentDto::getBook));
+        assertDoesNotThrow(() -> actualComments.stream().map(comment -> comment.getBook().getTitle()));
     }
 
 

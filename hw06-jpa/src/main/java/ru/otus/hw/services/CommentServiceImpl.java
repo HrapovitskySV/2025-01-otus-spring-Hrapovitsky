@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Comment;
@@ -23,12 +24,14 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<CommentDto> findById(long id) {
         Optional<Comment> oComment = commentRepository.findById(id);
         return oComment.map(commentConverter::toDto);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CommentDto> findByBookId(Long bookId) {
         var comments = commentRepository.findByBookId(bookId);
         return comments.stream().map(commentConverter::toDto).toList();
