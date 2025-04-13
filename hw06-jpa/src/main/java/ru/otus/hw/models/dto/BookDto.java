@@ -1,7 +1,6 @@
 package ru.otus.hw.models.dto;
 
 import lombok.Data;
-import ru.otus.hw.models.Author;
 import java.util.List;
 
 @Data
