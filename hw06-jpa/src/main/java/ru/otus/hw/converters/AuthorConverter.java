@@ -23,6 +23,9 @@ public class AuthorConverter {
     }
 
     public AuthorDto toDto(Author author) {
+        if (Objects.isNull(author)) {
+            return null;
+        }
         var authorDto = new AuthorDto();
         authorDto.setId(author.getId());
         authorDto.setFullName(author.getFullName());

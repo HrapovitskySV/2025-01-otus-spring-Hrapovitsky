@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.dto.GenreDto;
 
+import java.util.Objects;
+
 @Component
 public class GenreConverter {
     public String genreToString(Genre genre) {
@@ -15,6 +17,10 @@ public class GenreConverter {
     }
 
     public GenreDto toDto(Genre genre) {
+        if (Objects.isNull(genre)) {
+            return null;
+        }
+
         var genreDto = new GenreDto();
         genreDto.setId(genre.getId());
         genreDto.setName(genre.getName());
