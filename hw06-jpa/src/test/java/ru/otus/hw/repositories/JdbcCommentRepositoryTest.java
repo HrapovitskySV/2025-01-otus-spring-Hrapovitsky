@@ -3,8 +3,6 @@ package ru.otus.hw.repositories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.MethodSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -27,10 +25,6 @@ class JdbcCommentRepositoryTest {
     @Autowired
     private JdbcCommentRepository repositoryComment;
 
-    private List<Author> dbAuthors;
-
-    private List<Genre> dbGenres;
-
     private List<Book> dbBooks;
 
     private List<Comment> dbComments;
@@ -41,15 +35,10 @@ class JdbcCommentRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        dbAuthors = getDbAuthors();
-        dbGenres = getDbGenres();
+        List<Author> dbAuthors = getDbAuthors();
+        List<Genre> dbGenres = getDbGenres();
         dbBooks = getDbBooks(dbAuthors, dbGenres);
-        /*
-        for (Book book: dbBooks) {
-            tem.persist(book);
-        }
 
-         */
         dbComments = getDbComments(dbBooks);
         for (Comment comment: dbComments) {
             tem.persist(comment);
@@ -138,32 +127,20 @@ class JdbcCommentRepositoryTest {
     }
 
     private static List<Book> getDbBooks(List<Author> dbAuthors, List<Genre> dbGenres) {
-        List<Book> books= IntStream.range(1, 4).boxed()
+        return IntStream.range(1, 4).boxed()
                 .map(id -> new Book(id,
                         "BookTitle_" + id,
                         dbAuthors.get(id - 1),
                         dbGenres.subList((id - 1) * 2, (id - 1) * 2 + 2)
                 ))
                 .toList();
-
-
-        return books;
     }
 
     private static List<Comment> getDbComments(List<Book> dbBooks) {
         return IntStream.range(1, 7).boxed()
-                .map(id -> new Comment(0, dbBooks.get(Math.round((id-1)/2)), "Comment_" + id))
+                .map(id -> new Comment(0, dbBooks.get(Math.round((float) (id - 1) /2)), "Comment_" + id))
                 .toList();
     }
 
-    private static List<Book> getDbBooks() {
-        var dbAuthors = getDbAuthors();
-        var dbGenres = getDbGenres();
-        return getDbBooks(dbAuthors, dbGenres);
-    }
 
-    private static List<Comment> getDbComments() {
-        var dbBooks = getDbBooks();
-        return getDbComments(dbBooks);
-    }
 }

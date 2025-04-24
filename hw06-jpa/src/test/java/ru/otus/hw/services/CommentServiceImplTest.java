@@ -1,6 +1,6 @@
 package ru.otus.hw.services;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.hibernate.LazyInitializationException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +12,10 @@ import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.converters.GenreConverter;
-import ru.otus.hw.models.Comment;
-import ru.otus.hw.models.dto.CommentDto;
 import ru.otus.hw.repositories.JdbcBookRepository;
 import ru.otus.hw.repositories.JdbcCommentRepository;
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Сервис для работы с комментариями ")
 @DataJpaTest
@@ -32,14 +30,14 @@ class CommentServiceImplTest {
     @Test
     void findById() {
         var actualComment = commentService.findById(1L);
-        assertDoesNotThrow(() -> actualComment.get().getBook().getTitle());
+        assertThrows(LazyInitializationException.class,() -> actualComment.get().getBook().getTitle());
     }
 
     @Test
     void findByBookId() {
         var actualComments = commentService.findByBookId(1L);
 
-        assertDoesNotThrow(() -> actualComments.stream().map(comment -> comment.getBook().getTitle()));
+        assertThrows(LazyInitializationException.class,() -> actualComments.stream().map(comment -> comment.getBook().getTitle()).toList());
     }
 
 

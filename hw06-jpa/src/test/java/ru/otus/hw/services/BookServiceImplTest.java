@@ -1,6 +1,5 @@
 package ru.otus.hw.services;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.dto.AuthorDto;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.repositories.JdbcAuthorRepository;

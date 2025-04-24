@@ -9,13 +9,6 @@ import ru.otus.hw.models.dto.CommentDto;
 @RequiredArgsConstructor
 public class CommentConverter {
 
-    private final BookConverter bookConverter;
-
-    public String commentToString(Comment comment) {
-        return "Id: %d, Name: %s, BookId: %d".
-                formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
-    }
-
     public String commentDtoToString(CommentDto comment) {
         return "Id: %d, Name: %s, BookId: %d".
                 formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
@@ -24,7 +17,7 @@ public class CommentConverter {
     public CommentDto toDto(Comment comment) {
         var commentDto = new CommentDto();
         commentDto.setId(comment.getId());
-        commentDto.setBook(bookConverter.toDto(comment.getBook()));
+        commentDto.setBook(comment.getBook());
         commentDto.setComment(comment.getComment());
         return commentDto;
     }
