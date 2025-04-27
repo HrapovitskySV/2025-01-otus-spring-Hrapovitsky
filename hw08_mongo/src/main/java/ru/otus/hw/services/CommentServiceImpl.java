@@ -10,7 +10,6 @@ import ru.otus.hw.models.dto.CommentDto;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.CommentRepository;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,7 +25,7 @@ public class CommentServiceImpl implements CommentService {
 
 
     @Override
-    public Optional<Comment> findById(BigInteger id) {
+    public Optional<Comment> findById(String id) {
         return commentRepository.findById(id);
     }
 
@@ -37,31 +36,31 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> findByBookId(BigInteger bookId) {
+    public List<CommentDto> findByBookId(String bookId) {
         var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %s not found".formatted(bookId)));
 
         var comments = commentRepository.findByBook(book);
         return comments.stream().map(commentConverter::toDto).toList();
     }
 
     @Override
-    public Comment insert(String comment, BigInteger bookId) {
+    public Comment insert(String comment, String bookId) {
         return save(null, comment, bookId);
     }
 
     @Override
-    public Comment update(BigInteger id, String comment, BigInteger bookId) {
+    public Comment update(String id, String comment, String bookId) {
         return save(id, comment, bookId);
     }
 
     @Override
-    public void deleteById(BigInteger id) {
+    public void deleteById(String id) {
         commentRepository.deleteById(id);
     }
 
     @Override
-    public void deleteByBookId(BigInteger bookId) {
+    public void deleteByBookId(String bookId) {
         //var book = bookRepository.findById(bookId)
         //        .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
 
@@ -75,10 +74,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
 
-    private Comment save(BigInteger id, String commentText, BigInteger bookId) {
+    private Comment save(String id, String commentText, String bookId) {
 
         var book = bookRepository.findById(bookId)
-                .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
+                .orElseThrow(() -> new EntityNotFoundException("Book with id %s not found".formatted(bookId)));
 
         var comment = new Comment(id, book, commentText);
         return commentRepository.save(comment);

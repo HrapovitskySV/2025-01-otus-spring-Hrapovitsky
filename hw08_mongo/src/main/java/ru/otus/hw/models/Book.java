@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Data;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigInteger;
 import java.util.List;
 
 @Data
@@ -17,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Book {
     @Id
-    private BigInteger id;
+    private String id;
 
     @Field(name = "title")
     private String title;

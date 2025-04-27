@@ -7,12 +7,12 @@ import ru.otus.hw.models.dto.CommentDto;
 @Component
 public class CommentConverter {
     public String commentToString(Comment comment) {
-        return "Id: %d, Name: %s, BookId: %d".
+        return "Id: %s, Name: %s, BookId: %s".
                 formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
     }
 
     public String commentDtoToString(CommentDto comment) {
-        return "Id: %d, Name: %s, BookId: %d".
+        return "Id: %s, Name: %s, BookId: %s".
                 formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
     }
 

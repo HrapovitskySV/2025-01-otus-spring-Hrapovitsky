@@ -6,7 +6,6 @@ import org.springframework.shell.standard.ShellMethod;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.services.BookService;
 
-import java.math.BigInteger;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,10 +26,10 @@ public class BookCommands {
     }
 
     @ShellMethod(value = "Find book by id", key = "bbid")
-    public String findBookById(BigInteger id) {
+    public String findBookById(String id) {
         return bookService.findById(id)
                 .map(bookConverter::bookToString)
-                .orElse("Book with id %d not found".formatted(id));
+                .orElse("Book with id %s not found".formatted(id));
     }
 
     // bins newBook 1 1,6
@@ -42,14 +41,14 @@ public class BookCommands {
 
     // bupd 4 editedBook 3 2,5
     @ShellMethod(value = "Update book", key = "bupd")
-    public String updateBook(BigInteger id, String title, String authorName, Set<String> genreNames) {
+    public String updateBook(String id, String title, String authorName, Set<String> genreNames) {
         var savedBook = bookService.update(id, title, authorName, genreNames);
         return bookConverter.bookToString(savedBook);
     }
 
     // bdel 4
     @ShellMethod(value = "Delete book by id", key = "bdel")
-    public void deleteBook(BigInteger id) {
+    public void deleteBook(String id) {
         bookService.deleteById(id);
     }
 }

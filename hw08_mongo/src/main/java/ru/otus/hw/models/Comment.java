@@ -8,15 +8,13 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.math.BigInteger;
-
 @Data
 @Document(collection = "comments")
 @AllArgsConstructor
 @NoArgsConstructor
 public class Comment {
     @Id
-    private BigInteger id;
+    private String id;
 
     @DBRef
     private Book book;

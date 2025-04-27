@@ -1,29 +1,27 @@
 package ru.otus.hw.services;
 
-import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Comment;
 import ru.otus.hw.models.dto.CommentDto;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
 
 public interface CommentService {
-    Optional<Comment> findById(BigInteger id);
+    Optional<Comment> findById(String id);
 
     List<CommentDto> findAll();
 
-    List<CommentDto> findByBookId(BigInteger bookId);
+    List<CommentDto> findByBookId(String bookId);
 
-    Comment insert(String comment, BigInteger bookId);
+    Comment insert(String comment, String bookId);
 
-    Comment update(BigInteger id, String comment, BigInteger bookId);
+    Comment update(String id, String comment, String bookId);
 
-    void deleteById(BigInteger id);
+    void deleteById(String id);
 
-    void deleteByBookId(BigInteger bookId);
+    void deleteByBookId(String bookId);
 
     void deleteByBook(Book book);
 }

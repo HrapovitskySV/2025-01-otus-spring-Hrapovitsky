@@ -4,27 +4,25 @@ import jakarta.annotation.Nonnull;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Comment;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends MongoRepository<Comment, String> {
+public interface AuthorRepository extends MongoRepository<Author, String> {
 
     @Nonnull
-    Optional<Comment> findById(@Nonnull String id);
+    Optional<Author> findById(@Nonnull String id);
+
+    Optional<Author> findByFullName(String fullName);
 
     @Nonnull
-    List<Comment>  findAll();
-
-    List<Comment> findByBook(Book book);
+    List<Author> findAll();
 
     @Nonnull
-    Comment save(@Nonnull Comment comment);
+    Author save(@Nonnull Author author);
 
     void deleteById(@Nonnull String id);
 
-    void deleteByBook(Book book);
 }
+

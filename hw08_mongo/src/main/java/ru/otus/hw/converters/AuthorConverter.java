@@ -11,7 +11,7 @@ public class AuthorConverter {
         if (Objects.isNull(author)) {
             return "";
         }
-        return "Id: %d, FullName: %s".formatted(author.getId(), author.getFullName());
+        return "Id: %s, FullName: %s".formatted(author.getId(), author.getFullName());
     }
 
 }

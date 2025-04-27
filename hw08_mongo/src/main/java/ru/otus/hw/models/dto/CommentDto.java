@@ -3,11 +3,9 @@ package ru.otus.hw.models.dto;
 import lombok.Data;
 import ru.otus.hw.models.Book;
 
-import java.math.BigInteger;
-
 @Data
 public class CommentDto {
-    private BigInteger id;
+    private String id;
 
     private Book book;
 
