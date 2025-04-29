@@ -6,7 +6,7 @@ import lombok.Data;
 public class CommentDto {
     private long id;
 
-    private BookDto book;
+    private long bookId;
 
     private String comment;
 }

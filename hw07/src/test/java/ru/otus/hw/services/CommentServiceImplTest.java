@@ -11,6 +11,7 @@ import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.converters.GenreConverter;
+import ru.otus.hw.models.dto.CommentDto;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
@@ -27,14 +28,14 @@ class CommentServiceImplTest {
     @Test
     void findById() {
         var actualComment = commentService.findById(1L);
-        assertDoesNotThrow(() -> actualComment.get().getBook().getTitle());
+        assertDoesNotThrow(() -> actualComment.get().getBookId());
     }
 
     @Test
     void findByBookId() {
         var actualComments = commentService.findByBookId(1L);
 
-        assertDoesNotThrow(() -> actualComments.stream().map(comment -> comment.getBook().getTitle()));
+        assertDoesNotThrow(() -> actualComments.stream().map(CommentDto::getBookId).toList());
     }
 
 
