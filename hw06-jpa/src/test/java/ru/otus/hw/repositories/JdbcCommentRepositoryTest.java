@@ -38,6 +38,12 @@ class JdbcCommentRepositoryTest {
         List<Author> dbAuthors = getDbAuthors();
         List<Genre> dbGenres = getDbGenres();
         dbBooks = getDbBooks(dbAuthors, dbGenres);
+        /*
+        for (Book book: dbBooks) {
+
+            tem.persist(book);
+        }
+         */
 
         dbComments = getDbComments(dbBooks);
         for (Comment comment: dbComments) {
@@ -138,7 +144,7 @@ class JdbcCommentRepositoryTest {
 
     private static List<Comment> getDbComments(List<Book> dbBooks) {
         return IntStream.range(1, 7).boxed()
-                .map(id -> new Comment(0, dbBooks.get(Math.round((float) (id - 1) /2)), "Comment_" + id))
+                .map(id -> new Comment(0, dbBooks.get(Math.round((int) (id - 1) /2)), "Comment_" + id))
                 .toList();
     }
 

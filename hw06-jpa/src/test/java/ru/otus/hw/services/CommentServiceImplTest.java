@@ -12,9 +12,11 @@ import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.CommentConverter;
 import ru.otus.hw.converters.GenreConverter;
+import ru.otus.hw.models.dto.CommentDto;
 import ru.otus.hw.repositories.JdbcBookRepository;
 import ru.otus.hw.repositories.JdbcCommentRepository;
 
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DisplayName("Сервис для работы с комментариями ")
@@ -30,14 +32,14 @@ class CommentServiceImplTest {
     @Test
     void findById() {
         var actualComment = commentService.findById(1L);
-        assertThrows(LazyInitializationException.class,() -> actualComment.get().getBook().getTitle());
+        assertDoesNotThrow(() -> actualComment.get().getBookId());
     }
 
     @Test
     void findByBookId() {
         var actualComments = commentService.findByBookId(1L);
 
-        assertThrows(LazyInitializationException.class,() -> actualComments.stream().map(comment -> comment.getBook().getTitle()).toList());
+        assertDoesNotThrow(() -> actualComments.stream().map(CommentDto::getBookId).toList());
     }
 
 

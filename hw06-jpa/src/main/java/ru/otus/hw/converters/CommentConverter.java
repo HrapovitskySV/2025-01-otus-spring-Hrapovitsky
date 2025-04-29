@@ -11,13 +11,13 @@ public class CommentConverter {
 
     public String commentDtoToString(CommentDto comment) {
         return "Id: %d, Name: %s, BookId: %d".
-                formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
+                formatted(comment.getId(), comment.getComment(), comment.getBookId());
     }
 
     public CommentDto toDto(Comment comment) {
         var commentDto = new CommentDto();
         commentDto.setId(comment.getId());
-        commentDto.setBook(comment.getBook());
+        commentDto.setBookId(comment.getBook().getId());
         commentDto.setComment(comment.getComment());
         return commentDto;
     }
