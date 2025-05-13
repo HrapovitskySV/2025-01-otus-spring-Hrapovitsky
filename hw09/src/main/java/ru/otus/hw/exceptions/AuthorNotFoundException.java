@@ -1,8 +1,8 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.exceptions;
 
 public class AuthorNotFoundException  extends RuntimeException {
 
-    AuthorNotFoundException() {
+    public AuthorNotFoundException() {
         super("Author not found");
     }
 }

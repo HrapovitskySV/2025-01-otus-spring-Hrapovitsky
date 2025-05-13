@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.dto.BookDto;
+import ru.otus.hw.models.dto.BookDtoWeb;
 
 import java.util.stream.Collectors;
 
@@ -57,5 +58,14 @@ public class BookConverter {
         bookDto.setAuthor(authorConverter.toDto(book.getAuthor()));
         bookDto.setGenres(book.getGenres().stream().map(genreConverter::toDto).toList());
         return bookDto;
+    }
+
+    public BookDtoWeb toDtoWeb(BookDto book) {
+        var bookDtoWeb = new BookDtoWeb();
+        bookDtoWeb.setId(book.getId());
+        bookDtoWeb.setTitle(book.getTitle());
+        bookDtoWeb.setAuthor(book.getAuthor() != null ? book.getAuthor().getFullName() : "");
+        bookDtoWeb.setGenres(bookGenresToString(book));
+        return bookDtoWeb;
     }
 }

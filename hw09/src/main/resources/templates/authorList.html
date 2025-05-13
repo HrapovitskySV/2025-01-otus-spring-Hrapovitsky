@@ -40,7 +40,7 @@
         <td th:text="*{id}">1</td>
         <td th:text="*{fullName}">John Doe</td>
         <td>
-            <a href="authorEdit.html" th:href="@{/authors/edit(id=*{id})}">Edit</a>
+            <a href="authorEdit.html" th:href="@{/authors/edit/{id}(id=*{id})}">Edit</a>
         </td>
     </tr>
     </tbody>

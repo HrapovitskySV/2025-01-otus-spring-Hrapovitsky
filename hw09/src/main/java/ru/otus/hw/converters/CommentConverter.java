@@ -9,8 +9,6 @@ import ru.otus.hw.models.dto.CommentDto;
 @RequiredArgsConstructor
 public class CommentConverter {
 
-    private final BookConverter bookConverter;
-
     public String commentToString(Comment comment) {
         return "Id: %d, Name: %s, BookId: %d".
                 formatted(comment.getId(), comment.getComment(), comment.getBook().getId());
@@ -28,4 +26,5 @@ public class CommentConverter {
         commentDto.setComment(comment.getComment());
         return commentDto;
     }
+
 }

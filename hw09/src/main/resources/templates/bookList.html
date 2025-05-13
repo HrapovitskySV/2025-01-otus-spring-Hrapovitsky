@@ -42,13 +42,16 @@
     <tr th:each="book : ${books}" th:object="${book}">
         <td th:text="*{id}">1</td>
         <td th:text="*{title}">title</td>
-        <td th:text="${book.author != null ? book.author.fullName : ''}">John Doe</td>
-        <td th:text="${bookConverter.bookGenresToString(book)}">genres</td>
+        <td th:text="*{author}">John Doe</td>
+        <td th:text="*{genres}">genres</td>
         <td>
-            <a href="bookEdit.html" th:href="@{/edit(id=*{id})}">Edit</a>
+            <a href="bookEdit.html" th:href="@{/edit/__*{id}__}">Edit</a>
         </td>
         <td>
-            <a href="bookEdit.html" th:href="@{/delete(id=*{id})}">delete</a>
+           <!-- <a href="bookEdit.html" th:href="@{/delete(id=*{id})}">delete</a>-->
+            <form method="POST" th:action="@{/delete/__*{id}__}">
+                <button type="submit" name="submit" value="value" class="link-button">DELETE</button>
+            </form>
         </td>
     </tr>
     </tbody>

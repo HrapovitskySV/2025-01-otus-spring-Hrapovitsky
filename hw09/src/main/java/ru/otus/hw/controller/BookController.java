@@ -4,13 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.dto.BookDto;
+import ru.otus.hw.models.dto.BookDtoWeb;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -30,17 +32,16 @@ public class BookController {
     private final GenreService genreService;
 
     @GetMapping("/")
-    public String listAllAuthors(Model model) {
+    public String listAllBooks(Model model) {
         List<BookDto> books = bookService.findAll();
-        model.addAttribute("books", books);
-
-        model.addAttribute("bookConverter", bookConverter);
+        List<BookDtoWeb> booksWeb = books.stream().map(bookDto -> bookConverter.toDtoWeb(bookDto)).toList();
+        model.addAttribute("books", booksWeb);
 
         return "bookList";
     }
 
-    @GetMapping("/edit")
-    public String editPage(@RequestParam("id") long id, Model model) {
+    @GetMapping("/edit/{id}")
+    public String editPage(@PathVariable("id") long id, Model model) {
         Book book = bookService.findById(id).orElseThrow(BookNotFoundException::new);
         model.addAttribute("book", book);
         List<Author> authors = authorService.findAll();
@@ -61,8 +62,7 @@ public class BookController {
 
     @GetMapping("/insert")
     public String insertBook(Model model) {
-        Book book = new Book();
-        book.setGenres(new ArrayList<Genre>());
+        Book book = new Book(0,null,null,new ArrayList<Genre>());
 
         model.addAttribute("book", book);
         List<Author> authors = authorService.findAll();
@@ -74,8 +74,8 @@ public class BookController {
         return "bookEdit";
     }
 
-    @GetMapping("/delete")
-    public String deletePage(@RequestParam("id") long id, Model model) {
+    @PostMapping("/delete/{id}")
+    public String deletePage(@PathVariable("id") long id) {
         bookService.deleteById(id);
         return "redirect:/";
     }
