@@ -7,7 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Application {
 	// http://localhost:8080/
 	// http://localhost:8080/api/authors
-	// http://localhost:8080/server/system/info
+	// http://localhost:8080/api/books
+
 	public static void main(String[] args) {
 		SpringApplication.run(Application.class, args);
 	}
