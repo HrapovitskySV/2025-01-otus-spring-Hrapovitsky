@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit book</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+
+    <script>
+        function saveBook() {
+            const idInput = document.getElementById("id-input")
+            const titleInput = document.getElementById("book-title-input")
+            const authorInput = document.getElementById("book-author-input")
+
+            var options = document.getElementById('book-genres-input').selectedOptions;
+            var genres = Array.from(options).map(({ value }) => value);
+
+            const book = {id: idInput.value, title: titleInput.value,author: authorInput.value, genres: genres}
+
+            fetch("/api/books", {
+                method: '[[${method}]]',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(book)})
+            .then(rawResponse => rawResponse.json())
+            .then(document.location.href = '[[${redirectUrl}]]')
+        }
+
+
+    </script>
+</head>
+<body>
+
+<!-- Book edition -->
+<form id="edit-form" th:object="${book}">
+    <h3>Book Info:</h3>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" value="1" th:value="*{id}"/>
+    </div>
+
+    <div class="row">
+        <label for="book-title-input">Title:</label>
+        <input id="book-title-input" name="title" type="text" value="John Doe" th:value="*{title}"/>
+    </div>
+
+    <div>
+        Author:
+        <select id="book-author-input"  th:field="${book.author}">
+            <option value="0">select author</option>
+            <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}" th:selected="${book.author==author}"></option>
+        </select>
+    </div>
+
+    <div>
+        Genres:
+        <select id="book-genres-input" multiple="multiple" th:field="${book.genres}">
+            <option value="0">select genres</option>
+            <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}" th:selected="${book.genres.contains(genre)}"></option>
+        </select>
+    </div>
+
+    <div class="row">
+        <button type="button" onclick="saveBook()">Save</button>
+        <a href="bookList.html" th:href="@{/}"><button type="button">Cancel</button></a>
+    </div>
+</form>
+
+
+
+<!--<pre id = "saved-author"></pre>-->
+
+</body>
+</html>
