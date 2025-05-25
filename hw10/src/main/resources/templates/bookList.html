@@ -23,14 +23,15 @@
             width: 50px;
         }
     </style>
-    <script src="../jquery-3.7.1.min.js"></script>
     <script>
 
 
     function fillTable(books) {
-        $('tbody').empty()
-        books.forEach(function (book) {
-            $('tbody').append(`
+        let strTBody = ``
+        let tbody = document.getElementById(`tbody`)
+
+        books.forEach(book=>{
+            strTBody += `
                 <tr>
                     <td>${book.id}</td>
                     <td>${book.title}</td>
@@ -43,17 +44,20 @@
                         <button class="deleteBook" onclick="deleteBook(${book.id})">DELETE</button>
                     </td>
                 </tr>
-            `)
-        })
+            `})
+        tbody.innerHTML=strTBody
     }
 
     function getAllBooks() {
-        $.ajax({
-            method: "GET",
-            url: "/api/books",
-            cache: false,
-            success: function (result) {fillTable(result)}
-        });
+        fetch("/api/books", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+         })
+        .then(response => response.json())
+        .then(json => {fillTable(json)})
     }
 
   function deleteBook(id) {
@@ -90,7 +94,7 @@
         <th>delete</th>
     </tr>
     </thead>
-    <tbody/>
+    <tbody id="tbody"/>
 </table>
 <p>
 <a href="authorList.html" th:href="@{/authors/}">Авторы</a>

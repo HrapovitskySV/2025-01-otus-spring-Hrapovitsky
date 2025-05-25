@@ -1,4 +1,4 @@
-package ru.otus.hw.controller;
+package ru.otus.hw.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -9,7 +9,6 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.rest.AuthorRestController;
 import ru.otus.hw.services.AuthorService;
 
 import java.util.List;
