@@ -1,8 +1,8 @@
 package ru.otus.hw.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +29,7 @@ public class AuthorRestController {
     }
 
     @GetMapping("/api/authors/{id}")
-    public Author getAuthor(@PathVariable("id") long id, Model model) {
+    public Author getAuthor(@PathVariable("id") long id) {
         return authorService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
@@ -42,11 +42,11 @@ public class AuthorRestController {
     @PostMapping("/api/authors")
     public ResponseEntity<Author> insertAuthor(@RequestBody Author author) {
         Author savedAuthor = authorService.save(author);
-        return ResponseEntity.ok(savedAuthor);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedAuthor);
     }
 
     @DeleteMapping("/api/authors/{id}")
-    public ResponseEntity<String> deleteuthor(@PathVariable("id") long id) {
+    public ResponseEntity<String> deletAuthor(@PathVariable("id") long id) {
         authorService.deleteById(id);
         return ResponseEntity.ok("");
     }

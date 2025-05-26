@@ -2,7 +2,6 @@ package ru.otus.hw.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,13 +26,13 @@ public class BookRestController {
     private final BookConverter bookConverter;
 
     @GetMapping("api/books")
-    public List<BookDtoWeb> listAllBooks(Model model) {
+    public List<BookDtoWeb> listAllBooks() {
         List<BookDto> books = bookService.findAll();
         return books.stream().map(bookDto -> bookConverter.toDtoWeb(bookDto)).toList();
     }
 
     @GetMapping("api/books/{id}")
-    public Book getBook(@PathVariable("id") long id, Model model) {
+    public Book getBook(@PathVariable("id") long id) {
         return bookService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
