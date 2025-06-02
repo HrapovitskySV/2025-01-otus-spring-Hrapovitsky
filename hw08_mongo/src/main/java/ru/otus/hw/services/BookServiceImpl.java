@@ -67,11 +67,16 @@ public class BookServiceImpl implements BookService {
 
     @Transactional
     public Book save(String id, String title, String authorId, Set<String> genresId) {
-        var genres = genresId.stream().map(genreService::findById).filter(Optional::isPresent).map(Optional::get).toList();
+        var genres = genresId.stream()
+                .map(genreService::findById)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
         if (isEmpty(genresId) || genresId.size() != genres.size()) {
             throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresId));
         }
-        Author author = authorService.findById(authorId).orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
+        Author author = authorService.findById(authorId)
+                .orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
         return save(id, title, author, genres);
     }
 
