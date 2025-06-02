@@ -31,13 +31,13 @@ public class DatabaseChangelog {
                               AuthorRepository authorRepository,
                               GenreRepository genreRepository) {
 
-        Author author = new Author(null, "people");
+        Author author = new Author("1", "people");
         author = authorRepository.save(author);
 
-        Genre genre = new Genre(null, "сказка");
+        Genre genre = new Genre("1", "сказка");
         genreRepository.save(genre);
 
-        Book book = bookRepository.save(new Book(null, "Колобок", author, List.of(genre)));
+        Book book = bookRepository.save(new Book("1", "Колобок", author, List.of(genre)));
 
         commentRepository.save(new Comment(null, book, "Cool"));
         commentRepository.save(new Comment(null, book, "comment 2"));
@@ -49,21 +49,21 @@ public class DatabaseChangelog {
                                AuthorRepository authorRepository,
                                GenreRepository genreRepository) {
 
-        Author author = new Author(null, "Николай Носов");
+        Author author = new Author("2", "Николай Носов");
         author = authorRepository.save(author);
         var opGenre1 = genreRepository.findByName("сказка");
         Genre genre1;
         if (opGenre1.isEmpty()) {
-            genre1 = new Genre(null, "сказка");
+            genre1 = new Genre("1", "сказка");
             author = authorRepository.save(author);
         } else {
             genre1 = opGenre1.get();
         }
 
-        Genre genre2 = new Genre(null, "роман");
+        Genre genre2 = new Genre("2", "роман");
         genreRepository.save(genre1);
         genreRepository.save(genre2);
-        Book book = bookRepository.save(new Book("1", "Незнайка", author, List.of(genre1, genre2)));
+        Book book = bookRepository.save(new Book("2", "Незнайка", author, List.of(genre1, genre2)));
 
         commentRepository.save(new Comment("1", book, "Cool Незнайка"));
         commentRepository.save(new Comment(null, book, "comment Незнайка 2"));

@@ -14,7 +14,7 @@ public interface AuthorRepository extends MongoRepository<Author, String> {
     @Nonnull
     Optional<Author> findById(@Nonnull String id);
 
-    Optional<Author> findByFullName(String fullName);
+    List<Author> findByFullName(String fullName);
 
     @Nonnull
     List<Author> findAll();

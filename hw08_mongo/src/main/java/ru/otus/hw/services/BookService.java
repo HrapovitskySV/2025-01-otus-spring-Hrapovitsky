@@ -10,13 +10,11 @@ import java.util.Set;
 public interface BookService {
     Optional<Book> findById(String id);
 
-    Optional<Book> findFirst();
-
     List<BookDto> findAll();
 
-    Book insert(String title, String authorName, Set<String> genreNames);
+    Book insert(String title, String authorId, Set<String> genresIDs);
 
-    Book update(String id, String title, String authorName, Set<String> genreNames);
+    Book update(String id, String title, String authorId, Set<String> genresIDs);
 
     void deleteById(String id);
 }

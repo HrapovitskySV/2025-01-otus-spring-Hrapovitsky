@@ -1,11 +1,10 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.converters.BookConverter;
+import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
@@ -41,15 +40,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional(readOnly = true)
-    public Optional<Book> findFirst() {
-        Pageable firstPageWithTwoElements = PageRequest.of(0, 1);
-        var books = bookRepository.findAll(firstPageWithTwoElements);
-        return books.stream().findFirst();
-    }
-
-
-    @Override
-    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
         var books = bookRepository.findAll();
         return books.stream().map(bookConverter::toDto).toList();
@@ -57,18 +47,14 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public Book insert(String title, String authorName, Set<String> genreNames) {
-        var genres = genreNames.stream().map(genreService::findByNameOrCreate).toList();
-        Author author = authorService.findByNameOrCreate(authorName);
-        return save(null, title, author, genres);
+    public Book insert(String title, String authorId, Set<String> genresId) {
+        return save(null, title, authorId, genresId);
     }
 
     @Override
     @Transactional
-    public Book update(String id, String title, String authorName, Set<String> genreNames) {
-        var genres = genreNames.stream().map(genreService::findByNameOrCreate).toList();
-        Author author = authorService.findByNameOrCreate(authorName);
-        return save(id, title, author, genres);
+    public Book update(String id, String title, String authorId, Set<String> genresId) {
+        return save(id, title, authorId, genresId);
     }
 
     @Override
@@ -77,6 +63,16 @@ public class BookServiceImpl implements BookService {
         commentService.deleteByBookId(bookId);
         bookRepository.deleteById(bookId);
 
+    }
+
+    @Transactional
+    public Book save(String id, String title, String authorId, Set<String> genresId) {
+        var genres = genresId.stream().map(genreService::findById).filter(Optional::isPresent).map(Optional::get).toList();
+        if (isEmpty(genresId) || genresId.size() != genres.size()) {
+            throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresId));
+        }
+        Author author = authorService.findById(authorId).orElseThrow(() -> new EntityNotFoundException("Author with id %s not found".formatted(authorId)));
+        return save(id, title, author, genres);
     }
 
 

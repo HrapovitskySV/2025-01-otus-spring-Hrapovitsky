@@ -25,7 +25,18 @@ public class AuthorCommands {
 
     @ShellMethod(value = "Insert author", key = "afc")
     public String findByNameOrCreateAuthors(String name) {
-        var savedComment = authorService.findByNameOrCreate(name);
-        return authorConverter.authorToString(savedComment);
+        var savedAuthor = authorService.findByNameOrCreate(name);
+        return authorConverter.authorToString(savedAuthor);
+    }
+
+    @ShellMethod(value = "Update author", key = "aupd")
+    public String updateAuthor(String id, String name) {
+        var savedAuthor = authorService.save(id, name);
+        return authorConverter.authorToString(savedAuthor);
+    }
+
+    @ShellMethod(value = "Delete author", key = "adel")
+    public void deleteAuthor(String id) {
+        authorService.deleteById(id);
     }
 }

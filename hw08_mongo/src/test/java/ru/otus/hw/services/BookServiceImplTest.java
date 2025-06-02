@@ -25,7 +25,7 @@ class BookServiceImplTest {
     @DisplayName("У книги должен получить автора и жанры")
     @Test
     void findById() {
-        var actualBook = bookService.findFirst();
+        var actualBook = bookService.findById("1");
         assertDoesNotThrow(() -> actualBook.get().getAuthor());
         assertDoesNotThrow(() -> actualBook.get().getGenres());
     }

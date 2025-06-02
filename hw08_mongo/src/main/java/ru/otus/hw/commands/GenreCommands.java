@@ -25,7 +25,19 @@ public class GenreCommands {
 
     @ShellMethod(value = "Insert genre", key = "gfc")
     public String findByNameOrCreateGenre(String name) {
-        var savedComment = genreService.findByNameOrCreate(name);
-        return genreConverter.genreToString(savedComment);
+        var savedGenre = genreService.findByNameOrCreate(name);
+        return genreConverter.genreToString(savedGenre);
+    }
+
+
+    @ShellMethod(value = "Update genre", key = "gupd")
+    public String updateGenre(String id, String name) {
+        var savedGenre = genreService.save(id, name);
+        return genreConverter.genreToString(savedGenre);
+    }
+
+    @ShellMethod(value = "Delete genre", key = "gdel")
+    public void deleteGenre(String id) {
+        genreService.deleteById(id);
     }
 }
