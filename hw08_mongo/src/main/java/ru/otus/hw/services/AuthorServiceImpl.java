@@ -1,15 +1,12 @@
 package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
+import ru.otus.hw.repositories.BookRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +16,7 @@ public class AuthorServiceImpl implements AuthorService {
 
     private final AuthorRepository authorRepository;
 
-    private final MongoTemplate mongoTemplate;
+    private final BookRepository bookRepository;
 
     @Override
     public Optional<Author> findById(String id) {
@@ -31,29 +28,22 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.findAll();
     }
 
-    public void updateBookAuthors(String authorId, String authorFullName) {
-        Query query = new Query(Criteria.where("author._id").is(authorId));
-        Update update = new Update().set("author.full_Name", authorFullName);
-        var wr = mongoTemplate.findAndModify(query,update,Book.class);
-    }
+
 
     @Override
+    @Transactional
     public Author save(String id, String fullName) {
         var author = new Author(id, fullName);
-        updateBookAuthors(id, fullName);
+        bookRepository.updateBookAuthors(id, fullName);
         return authorRepository.save(author);
     }
 
-    public void deleteBookAuthors(String authorId) {
-        Query query = new Query(Criteria.where("author._id").is(authorId));
-        Update update = new Update().set("author", null);
-        var wr = mongoTemplate.findAndModify(query,update,Book.class);
-    }
+
 
     @Override
     @Transactional
     public void deleteById(String id) {
-        deleteBookAuthors(id);
+        bookRepository.deleteBookAuthors(id);
         authorRepository.deleteById(id);
     }
 

@@ -64,8 +64,10 @@ public class CommentServiceImpl implements CommentService {
         //var book = bookRepository.findById(bookId)
         //        .orElseThrow(() -> new EntityNotFoundException("Book with id %d not found".formatted(bookId)));
 
-        var book = new Book(bookId,null,null,null);
-        commentRepository.deleteByBook(book);
+        //var book = new Book(bookId,null,null,null);
+        //commentRepository.deleteByBook(book);
+        commentRepository.deleteByBookId(bookId);
+
     }
 
     @Override
