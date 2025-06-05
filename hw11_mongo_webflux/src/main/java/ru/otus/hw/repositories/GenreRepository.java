@@ -1,27 +1,30 @@
 package ru.otus.hw.repositories;
 
 import jakarta.annotation.Nonnull;
-import org.springframework.data.mongodb.repository.MongoRepository;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.mongodb.repository.ReactiveMongoRepository;
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Genre;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
-public interface GenreRepository extends MongoRepository<Genre, String> {
+public interface GenreRepository extends ReactiveMongoRepository<Genre, String> {
 
     @Nonnull
-    Optional<Genre> findById(@Nonnull String id);
+    Mono<Genre> findById(@Nonnull String id);
 
-    Optional<Genre> findByName(String name);
+    Mono<Genre> findByName(String name);
+
+    @NotNull
+    Flux<Genre> findAllById(@NotNull Iterable<String> ids);
 
     @Nonnull
-    List<Genre> findAll();
+    Flux<Genre> findAll();
 
     @Nonnull
-    Genre save(@Nonnull Genre genre);
+    Mono<Genre>  save(@Nonnull Genre genre);
 
-    void deleteById(@Nonnull String id);
+    Mono<Void> deleteById(@Nonnull String id);
 
 }

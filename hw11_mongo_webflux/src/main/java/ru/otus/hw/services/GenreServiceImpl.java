@@ -28,13 +28,7 @@ public class GenreServiceImpl implements GenreService {
         return  genreRepository.findAll();
     }
 
-    @Override
-    @Transactional
-    public Genre save(String id, String name) {
-        var genre = new Genre(id, name);
-        bookRepository.updateBookGenre(id, name);
-        return genreRepository.save(genre);
-    }
+
 
     @Override
     @Transactional
@@ -44,12 +38,4 @@ public class GenreServiceImpl implements GenreService {
     }
 
 
-    public Genre findByNameOrCreate(String name) {
-        var genre = genreRepository.findByName(name);
-        if (genre.isEmpty()) {
-            return  save(null, name);
-        }
-
-        return genre.get();
-    }
 }

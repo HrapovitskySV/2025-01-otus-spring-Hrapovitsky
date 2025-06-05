@@ -1,5 +1,7 @@
 package ru.otus.hw.services;
 
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Author;
 
 import java.util.List;
@@ -7,13 +9,13 @@ import java.util.Optional;
 
 
 public interface AuthorService {
-    Optional<Author> findById(String id);
+    Mono<Author> findById(String id);
 
-    List<Author> findAll();
+    Flux<Author> findAll();
 
-    Author save(String id, String fullName);
+    Mono<Author>  save(String id, String fullName);
 
-    void deleteById(String id);
+    Mono<Author>  save(Author author);
 
-    Author findByNameOrCreate(String fullName);
+    Mono<Void> deleteById(String id);
 }

@@ -28,3 +28,4 @@ mongock:
 logging:
   level:
     ROOT: ERROR
+    ru.otus.hw.controller: DEBUG
