@@ -13,17 +13,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.converters.BookConverter;
-import ru.otus.hw.exceptions.AuthorNotFoundException;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.services.BookService;
-import java.util.List;
-
-import static org.apache.commons.lang3.StringUtils.defaultIfEmpty;
 
 @RestController
 @RequiredArgsConstructor

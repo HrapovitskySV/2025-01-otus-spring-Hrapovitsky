@@ -24,15 +24,4 @@ public class Book {
     private Author author;
 
     private List<Genre> genres;
-
-// th:field="${book.author}"
-    public boolean eqAuthor(Author author){
-        var res= this.author.equals(author);
-        return res;
-    }
-// th:field="${book.genres}"
-    public boolean containsGenre(Genre genre){
-        var res= this.genres.contains(genre);
-        return res;
-    }
 }

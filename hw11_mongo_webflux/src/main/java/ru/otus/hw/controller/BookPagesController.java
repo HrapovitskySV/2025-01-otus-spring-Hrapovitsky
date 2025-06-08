@@ -1,28 +1,20 @@
 package ru.otus.hw.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.reactive.result.view.Rendering;
-import org.thymeleaf.spring6.context.webflux.IReactiveDataDriverContextVariable;
-import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Mono;
-import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 import ru.otus.hw.repositories.GenreRepository;
-import ru.otus.hw.services.AuthorService;
-import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.GenreService;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -70,28 +62,5 @@ public class BookPagesController {
                 .modelAttribute("method", "POST")
                 .modelAttribute("redirectUrl", "../")
                 .build());
-/*
-        model.addAttribute("book", book);
-        //model.addAttribute("genres", new ReactiveDataDriverContextVariable(genres, 1));
-        //model.addAttribute("authors", new ReactiveDataDriverContextVariable(authors, 1));
-        //model.addAttribute("authors", authors.toStream().toList());
-        //model.addAttribute("genres", genres.toStream().toList());
-        //model.addAttribute("genres", new ArrayList<Genre>());
-
-        model.addAttribute("method", "POST");
-        model.addAttribute("redirectUrl", "./");
-
-        // loads 1 and display 1, stream data, data driven mode.
-        IReactiveDataDriverContextVariable authors =
-                new ReactiveDataDriverContextVariable(authorRepository.findAll(), 10);
-        IReactiveDataDriverContextVariable genres =
-                new ReactiveDataDriverContextVariable(genreRepository.findAll(), 10);
-
-
-        model.addAttribute("authors", authors);
-        model.addAttribute("genres", genres);
-
-        return "bookEdit";
- */
     }
 }
