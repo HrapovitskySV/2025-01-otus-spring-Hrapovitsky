@@ -12,6 +12,7 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.CommentRepository;
 import ru.otus.hw.repositories.GenreRepository;
 
 import java.util.List;
@@ -32,7 +33,9 @@ public class BookServiceImpl implements BookService {
 
     private final GenreRepository genreRepository;
 
-    private final CommentService commentService;
+    private final CommentRepository commentRepository;
+
+
 
     private final BookConverter bookConverter;
 
@@ -53,7 +56,7 @@ public class BookServiceImpl implements BookService {
     @Override
     @Transactional
     public void deleteById(String bookId) {
-        commentService.deleteByBookId(bookId);
+        commentRepository.deleteByBookId(bookId);
         bookRepository.deleteById(bookId);
 
     }

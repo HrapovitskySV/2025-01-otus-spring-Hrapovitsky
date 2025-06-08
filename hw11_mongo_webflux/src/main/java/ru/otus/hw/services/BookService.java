@@ -10,10 +10,6 @@ import java.util.Optional;
 import java.util.Set;
 
 public interface BookService {
-    Mono<Book> findById(String id);
-
-    Flux<BookDto> findAll();
-
     Mono<Book>  insert(String title, String authorId, Set<String> genresIDs);
 
     Mono<Book> update(String id, String title, String authorId, Set<String> genresIDs);

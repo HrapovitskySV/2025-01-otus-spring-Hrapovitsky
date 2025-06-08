@@ -1,14 +1,22 @@
 package ru.otus.hw.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.reactive.result.view.Rendering;
+import org.thymeleaf.spring6.context.webflux.IReactiveDataDriverContextVariable;
+import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.repositories.AuthorRepository;
+import ru.otus.hw.repositories.BookRepository;
+import ru.otus.hw.repositories.GenreRepository;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.GenreService;
@@ -19,11 +27,13 @@ import java.util.List;
 @Controller
 @RequiredArgsConstructor
 public class BookPagesController {
-    private final BookService bookService;
 
-    private final AuthorService authorService;
+    private final BookRepository bookRepository;
 
-    private final GenreService genreService;
+    private final AuthorRepository authorRepository;
+
+    private final GenreRepository genreRepository;
+
 
     @GetMapping("/")
     public String listAllBooks(Model model) {
@@ -31,35 +41,57 @@ public class BookPagesController {
     }
 
     @GetMapping("/edit/{id}")
-    public String editPage(@PathVariable("id") String id, Model model) {
-        Book book = bookService.findById(id).orElseThrow(BookNotFoundException::new);
-        model.addAttribute("book", book);
-        List<Author> authors = authorService.findAll();
-        model.addAttribute("authors", authors);
+    public Mono<Rendering> editPage(@PathVariable("id") String id, Model model) {
 
-        List<Genre> genres = genreService.findAll();
-        model.addAttribute("genres", genres);
-        model.addAttribute("method", "PUT");
-        model.addAttribute("redirectUrl", "../");
+        var book = bookRepository.findById(id);
+        var authors = authorRepository.findAll();
+        var genres = genreRepository.findAll();
 
-
-        return "bookEdit";
+        return Mono.just(Rendering.view("bookEdit")
+                .modelAttribute("book", book)
+                .modelAttribute("authors", authors)
+                .modelAttribute("genres", genres)
+                .modelAttribute("method", "PUT")
+                .modelAttribute("redirectUrl", "../")
+                .build());
     }
 
 
     @GetMapping("/add")
-    public String insertBook(Model model) {
-        Book book = new Book(null,null,null,new ArrayList<Genre>());
+    public Mono<Rendering> insertBook(Model model) {
+        Book book = new Book(null,null,new Author("",""),new ArrayList<Genre>());
+        var authors = authorRepository.findAll();
+        var genres = genreRepository.findAll();
 
+        return Mono.just(Rendering.view("bookEdit")
+                .modelAttribute("book", book)
+                .modelAttribute("authors", authors)
+                .modelAttribute("genres", genres)
+                .modelAttribute("method", "POST")
+                .modelAttribute("redirectUrl", "../")
+                .build());
+/*
         model.addAttribute("book", book);
-        List<Author> authors = authorService.findAll();
-        model.addAttribute("authors", authors);
-        List<Genre> genres = genreService.findAll();
-        model.addAttribute("genres", genres);
+        //model.addAttribute("genres", new ReactiveDataDriverContextVariable(genres, 1));
+        //model.addAttribute("authors", new ReactiveDataDriverContextVariable(authors, 1));
+        //model.addAttribute("authors", authors.toStream().toList());
+        //model.addAttribute("genres", genres.toStream().toList());
+        //model.addAttribute("genres", new ArrayList<Genre>());
 
         model.addAttribute("method", "POST");
         model.addAttribute("redirectUrl", "./");
 
+        // loads 1 and display 1, stream data, data driven mode.
+        IReactiveDataDriverContextVariable authors =
+                new ReactiveDataDriverContextVariable(authorRepository.findAll(), 10);
+        IReactiveDataDriverContextVariable genres =
+                new ReactiveDataDriverContextVariable(genreRepository.findAll(), 10);
+
+
+        model.addAttribute("authors", authors);
+        model.addAttribute("genres", genres);
+
         return "bookEdit";
+ */
     }
 }

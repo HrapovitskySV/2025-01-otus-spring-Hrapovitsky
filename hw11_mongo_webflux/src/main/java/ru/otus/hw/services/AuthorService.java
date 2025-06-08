@@ -13,8 +13,6 @@ public interface AuthorService {
 
     Flux<Author> findAll();
 
-    Mono<Author>  save(String id, String fullName);
-
     Mono<Author>  save(Author author);
 
     Mono<Void> deleteById(String id);

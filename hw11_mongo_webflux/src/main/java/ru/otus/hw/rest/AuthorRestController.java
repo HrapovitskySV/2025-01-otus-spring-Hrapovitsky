@@ -15,12 +15,15 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.repositories.AuthorRepository;
+import ru.otus.hw.services.AuthorService;
 
 @RestController
 @RequiredArgsConstructor
 public class AuthorRestController {
 
     private final AuthorRepository authorRepository;
+
+    private final AuthorService authorService;
 
 
     @GetMapping("/api/authors")
@@ -39,22 +42,21 @@ public class AuthorRestController {
 
     @PutMapping("/api/authors")
     public Mono<ResponseEntity<Author>> saveAuthor(@RequestBody Author author) {
-        //Mono<Author> savedAuthor = authorRepository.save(author);
-        return authorRepository.save(author)
+        return authorService.save(author)
                 .map(savedAuthor -> new ResponseEntity<Author>(savedAuthor, HttpStatus.OK))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @PostMapping("/api/authors")
     public Mono<ResponseEntity<Author>> insertAuthor(@RequestBody Author author) {
-        return authorRepository.save(author)
+        return authorService.save(author)
                 .map(savedAuthor -> new ResponseEntity<Author>(savedAuthor, HttpStatusCode.valueOf(201)))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }
 
     @DeleteMapping("/api/authors/{id}")
     public Mono<ResponseEntity<Void>> deleteAuthor(@PathVariable("id") String id) {
-        return authorRepository.deleteById(id)
+        return authorService.deleteById(id)
                 .then(Mono.just(new ResponseEntity<Void>(HttpStatus.OK)))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
     }

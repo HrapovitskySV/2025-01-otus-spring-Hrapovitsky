@@ -28,15 +28,6 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
 
-
-    @Override
-    @Transactional
-    public Mono<Author> save(String id, String fullName) {
-        var author = new Author(id, fullName);
-        bookRepository.updateBookAuthors(id, fullName);
-        return authorRepository.save(author);
-    }
-
     @Override
     public Mono<Author> save(Author author) {
         bookRepository.updateBookAuthors(author.getId(), author.getFullName());
@@ -48,8 +39,7 @@ public class AuthorServiceImpl implements AuthorService {
     @Transactional
     public Mono<Void> deleteById(String id) {
         bookRepository.deleteBookAuthors(id);
-        authorRepository.deleteById(id);
-        return null;
+        return authorRepository.deleteById(id);
     }
 
 }

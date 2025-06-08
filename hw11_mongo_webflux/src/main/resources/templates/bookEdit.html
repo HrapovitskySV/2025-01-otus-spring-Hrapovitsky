@@ -73,7 +73,7 @@
 
     <div>
         Author:
-        <select id="book-author-input"  th:field="${book.author}">
+        <select id="book-author-input" >
             <option value="0">select author</option>
             <option th:each="author : ${authors}" th:value="${author.id}" th:text="${author.fullName}" th:selected="${book.author==author}"></option>
         </select>
@@ -81,7 +81,7 @@
 
     <div>
         Genres:
-        <select id="book-genres-input" multiple="multiple" th:field="${book.genres}">
+        <select id="book-genres-input" multiple="multiple">
             <option value="0">select genres</option>
             <option th:each="genre : ${genres}" th:value="${genre.id}" th:text="${genre.name}" th:selected="${book.genres.contains(genre)}"></option>
         </select>

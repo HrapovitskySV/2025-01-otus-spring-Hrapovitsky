@@ -6,28 +6,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.server.handler.ResponseStatusExceptionHandler;
+import reactor.core.publisher.Mono;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.exceptions.EntityNotFoundException;
 
 @ControllerAdvice
-public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionHandler {
+public class RestResponseEntityExceptionHandler extends ResponseStatusExceptionHandler {
     @ExceptionHandler(value = { IllegalArgumentException.class, IllegalStateException.class })
-    protected ResponseEntity<Object> handleConflict(RuntimeException ex, WebRequest request) {
+    protected Mono<ResponseEntity<Object>> handleConflict(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "This should be application specific";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+        return Mono.just(ResponseEntity.status(HttpStatus.CONFLICT).body(bodyOfResponse));
     }
 
     @ExceptionHandler(value = {BookNotFoundException.class, EntityNotFoundException.class })
-    protected ResponseEntity<Object> handleBadRequest(RuntimeException ex, WebRequest request) {
+    protected Mono<ResponseEntity<Object>> handleBadRequest(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Entity not found";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyOfResponse));
     }
 
     @ExceptionHandler(value = {AuthorNotFoundException.class})
-    protected ResponseEntity<Object> handleAuthorNotFound(RuntimeException ex, WebRequest request) {
+    protected Mono<ResponseEntity<Object>> handleAuthorNotFound(RuntimeException ex, WebRequest request) {
         String bodyOfResponse = "Author not found";
-        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+        return Mono.just(ResponseEntity.status(HttpStatus.BAD_REQUEST).body(bodyOfResponse));
     }
 }

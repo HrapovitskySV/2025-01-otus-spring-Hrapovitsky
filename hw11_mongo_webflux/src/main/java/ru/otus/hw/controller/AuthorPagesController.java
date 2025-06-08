@@ -5,6 +5,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.reactive.result.view.Rendering;
+import org.thymeleaf.spring6.context.webflux.ReactiveDataDriverContextVariable;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.models.Author;
@@ -26,21 +28,34 @@ public class AuthorPagesController {
 
 
     @GetMapping("/authors/add")
+    /*
     public String insertAuthor(Model model) {
         Author author = new Author();
         model.addAttribute("author", author);
         model.addAttribute("method", "POST");
         model.addAttribute("redirectUrl", "./");
         return "authorEdit";
+
+         не работает
+         */
+
+     public Mono<Rendering> insertAuthor(Model model) {
+        Author author = new Author();
+        return Mono.just(Rendering.view("authorEdit.html")
+                .modelAttribute("author", author)
+                .modelAttribute("method", "POST")
+                .modelAttribute("redirectUrl", "../")
+                .build());
     }
 
     @GetMapping("/authors/edit/{id}")
-    public String editPage(@PathVariable("id") String id, Model model) {
-        Mono<Author> author = authorRepository.findById(id);
-                //.orElseThrow(AuthorNotFoundException::new);
-        model.addAttribute("author", author);
-        model.addAttribute("method", "PUT");
-        model.addAttribute("redirectUrl", "../");
-        return "authorEdit";
+    public Mono<Rendering> editPage(@PathVariable("id") String id, final Model model) {
+        var author = authorRepository.findById(id);
+
+        return Mono.just(Rendering.view("authorEdit")
+                .modelAttribute("author", author)
+                .modelAttribute("method", "PUT")
+                .modelAttribute("redirectUrl", "../")
+                .build());
     }
 }
