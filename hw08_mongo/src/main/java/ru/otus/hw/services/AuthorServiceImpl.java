@@ -38,8 +38,6 @@ public class AuthorServiceImpl implements AuthorService {
         return authorRepository.save(author);
     }
 
-
-
     @Override
     @Transactional
     public void deleteById(String id) {
