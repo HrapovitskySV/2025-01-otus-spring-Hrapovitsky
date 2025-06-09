@@ -22,30 +22,30 @@ public class AuthorRestController {
     private final AuthorService authorService;
 
 
-    @GetMapping("/api/authors")
+    @GetMapping("/authenticated/api/authors")
     public List<Author> getAllAuthors() {
         List<Author> authors = authorService.findAll();
         return authors;
     }
 
-    @GetMapping("/api/authors/{id}")
+    @GetMapping("/authenticated/api/authors/{id}")
     public Author getAuthor(@PathVariable("id") long id) {
         return authorService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
-    @PutMapping("/api/authors")
+    @PutMapping("/authenticated/api/authors")
     public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
         Author savedAuthor = authorService.save(author);
         return ResponseEntity.ok(savedAuthor);
     }
 
-    @PostMapping("/api/authors")
+    @PostMapping("/authenticated/api/authors")
     public ResponseEntity<Author> insertAuthor(@RequestBody Author author) {
         Author savedAuthor = authorService.save(author);
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedAuthor);
     }
 
-    @DeleteMapping("/api/authors/{id}")
+    @DeleteMapping("/authenticated/api/authors/{id}")
     public ResponseEntity<String> deletAuthor(@PathVariable("id") long id) {
         authorService.deleteById(id);
         return ResponseEntity.ok("");

@@ -38,7 +38,7 @@
                     <td>${book.author}</td>
                     <td>${book.genres}</td>
                     <td>
-                        <a href="/edit/${book.id}">Edit</a>
+                        <a href="/authenticated/edit/${book.id}">Edit</a>
                     </td>
                     <td>
                         <button class="deleteBook" onclick="deleteBook(${book.id})">DELETE</button>
@@ -49,7 +49,7 @@
     }
 
     function getAllBooks() {
-        fetch("/api/books", {
+        fetch("/authenticated/api/books", {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -61,7 +61,7 @@
     }
 
   function deleteBook(id) {
-        fetch("/api/books/"+id, {
+        fetch("/authenticated/api/books/"+id, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
@@ -81,7 +81,7 @@
 <body onload="getAllBooks()">
 <h3>Books:</h3>
 
-<a href = "add.html" th:href = "@{/add}">Add new</a>
+<a href = "add.html" th:href = "@{/authenticated/add}">Add new</a>
 
 <table class="books">
     <thead>
@@ -97,6 +97,6 @@
     <tbody id="tbody"/>
 </table>
 <p>
-<a href="authorList.html" th:href="@{/authors/}">Авторы</a>
+<a href="authorList.html" th:href="@{/authenticated/authors/}">Авторы</a>
 </body>
 </html>

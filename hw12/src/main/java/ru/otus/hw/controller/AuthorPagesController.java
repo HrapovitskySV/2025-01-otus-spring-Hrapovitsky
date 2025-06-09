@@ -1,6 +1,10 @@
 package ru.otus.hw.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,20 +13,34 @@ import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.services.AuthorService;
 
+import java.util.Arrays;
+
 @Controller
 @RequiredArgsConstructor
 public class AuthorPagesController {
 
     private final AuthorService authorService;
 
-    @GetMapping("/authors/")
+    @Autowired
+    private HttpServletRequest request;
+
+    @Autowired
+    private HttpServletResponse response;
+
+    @GetMapping("/authenticated/authors/")
     public String listAuthorsPage() {
         return "authorList";
     }
 
 
-    @GetMapping("/authors/add")
+    @GetMapping("/authenticated/authors/add")
     public String insertAuthor(Model model) {
+        var cookies= request.getCookies();
+        var cookieJsessionId=Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("JSESSIONID")).findFirst();
+        if (cookieJsessionId.isPresent()) {
+            model.addAttribute("JSESSIONID", cookieJsessionId.get().getValue());
+        }
+
         Author author = new Author();
         model.addAttribute("author", author);
         model.addAttribute("method", "POST");
@@ -30,8 +48,14 @@ public class AuthorPagesController {
         return "authorEdit";
     }
 
-    @GetMapping("/authors/edit/{id}")
+    @GetMapping("/authenticated/authors/edit/{id}")
     public String editPage(@PathVariable("id") long id, Model model) {
+        var cookies= request.getCookies();
+        var cookieJsessionId=Arrays.stream(cookies).filter(cookie -> cookie.getName().equals("JSESSIONID")).findFirst();
+        if (cookieJsessionId.isPresent()) {
+            model.addAttribute("JSESSIONID", cookieJsessionId.get().getValue());
+        }
+
         Author author = authorService.findById(id).orElseThrow(AuthorNotFoundException::new);
         model.addAttribute("author", author);
         model.addAttribute("method", "PUT");

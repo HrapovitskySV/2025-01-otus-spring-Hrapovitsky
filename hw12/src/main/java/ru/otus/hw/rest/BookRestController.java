@@ -25,18 +25,18 @@ public class BookRestController {
 
     private final BookConverter bookConverter;
 
-    @GetMapping("api/books")
+    @GetMapping("/authenticated/api/books")
     public List<BookDtoWeb> listAllBooks() {
         List<BookDto> books = bookService.findAll();
         return books.stream().map(bookDto -> bookConverter.toDtoWeb(bookDto)).toList();
     }
 
-    @GetMapping("api/books/{id}")
+    @GetMapping("/authenticated/api/books/{id}")
     public Book getBook(@PathVariable("id") long id) {
         return bookService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
-    @PutMapping("/api/books")
+    @PutMapping("/authenticated/api/books")
     public ResponseEntity<String> saveBook(@RequestBody BookDtoInputWeb bookDto) {
         Book savedBook = bookService.update(
                 bookDto.getId(),
@@ -46,13 +46,13 @@ public class BookRestController {
         return ResponseEntity.ok("savedBook");
     }
 
-    @PostMapping("api/books")
+    @PostMapping("/authenticated/api/books")
     public ResponseEntity<Book> insertBook(@RequestBody BookDtoInputWeb bookDto) {
         Book savedBook = bookService.insert(bookDto.getTitle(), bookDto.getAuthor(), bookDto.getGenres());
         return ResponseEntity.ok(savedBook);
     }
 
-    @DeleteMapping("/api/books/{id}")
+    @DeleteMapping("/authenticated/api/books/{id}")
     public ResponseEntity<String> deletePage(@PathVariable("id") long id) {
         bookService.deleteById(id);
         return ResponseEntity.ok("deleted");

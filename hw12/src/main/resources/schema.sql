@@ -29,3 +29,23 @@ create table comments (
     comment varchar(255),
     primary key (id)
 );
+
+create table users (
+    id bigserial,
+    Username varchar(20),
+    Password varchar(100),
+    primary key (id)
+);
+
+create table roles (
+    id bigserial,
+    name varchar(100),
+    primary key (id)
+);
+
+
+create table users_roles (
+    user_id bigint references users(id) on delete cascade,
+    role_id bigint references roles(id) on delete cascade,
+    primary key (user_id, role_id)
+);

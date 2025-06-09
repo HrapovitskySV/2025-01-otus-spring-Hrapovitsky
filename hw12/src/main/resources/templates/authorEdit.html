@@ -30,12 +30,20 @@
                 method: '[[${method}]]',
                 headers: {
                   'Accept': 'application/json',
-                  'Content-Type': 'application/json'
+                  'Content-Type': 'application/json',
+                  'cookie': 'JSESSIONID=[[${JSESSIONID}]]'
                 },
                 body: JSON.stringify(author)})
-            .then(rawResponse => rawResponse.json())
-            .then(document.location.href = '[[${redirectUrl}]]')
-
+            .then(response => {
+                if (!response.ok) {
+                    response.text().then(function (text) {
+                        let diverror = document.getElementById(`diverror`)
+                        diverror.innerHTML=text;
+                    });
+                    throw new Error('Network error');
+                }
+                document.location.href = '[[${redirectUrl}]]'
+               })
         }
     </script>
 </head>
@@ -57,8 +65,9 @@
 
     <div class="row">
         <button type="button" onclick="saveAuthor()" >Save</button>
-        <a href="authorList.html" th:href="@{/authors/}"><button type="button">Cancel</button></a>
+        <a href="authorList.html" th:href="@{/authenticated/authors/}"><button type="button">Cancel</button></a>
     </div>
+    <div id="diverror">[[${JSESSIONID}]]</div>
 </form>
 
 </body>

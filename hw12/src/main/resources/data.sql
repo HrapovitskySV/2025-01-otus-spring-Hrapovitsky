@@ -16,3 +16,13 @@ values (1, 1),   (1, 2),
 
 insert into comments(comment, book_id)
 values ('comment_1_1', 1), ('comment_1_2', 1), ('comment_2_1', 2), ('comment_3_1', 3);
+
+
+INSERT INTO users(id, Username, Password)
+  VALUES (1, 'USER', '$2a$12$3xhExkLmROmGyfVAAFq16.UWFVJx3qEUBK9Lxe1Is.X3geAs9ttvC'), (2, 'ADMIN','2');
+
+INSERT INTO roles(id, name)
+  VALUES (1, 'ROLE_USER'), (2, 'ROLE_ADMIN');
+
+  insert into users_roles(user_id, role_id)
+  values (1, 1),   (2, 2);
