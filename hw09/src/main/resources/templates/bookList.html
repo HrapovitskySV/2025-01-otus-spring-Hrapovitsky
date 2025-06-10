@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .persons {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .persons tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .persons td:last-child, td:first-child {
+            width: 50px;
+        }
+    </style>
+</head>
+<body>
+<h3>Books:</h3>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genres</th>
+        <th>edit</th>
+        <th>delete</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="book : ${books}" th:object="${book}">
+        <td th:text="*{id}">1</td>
+        <td th:text="*{title}">title</td>
+        <td th:text="*{author}">John Doe</td>
+        <td th:text="*{genres}">genres</td>
+        <td>
+            <a href="bookEdit.html" th:href="@{/edit/__*{id}__}">Edit</a>
+        </td>
+        <td>
+           <!-- <a href="bookEdit.html" th:href="@{/delete(id=*{id})}">delete</a>-->
+            <form method="POST" th:action="@{/delete/__*{id}__}">
+                <button type="submit" name="submit" value="value" class="link-button">DELETE</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="bookInsert.html" th:href="@{/insert}">Add new book</a>
+<p>
+<a href="authorList.html" th:href="@{/authors/}">Авторы</a>
+</body>
+</html>
