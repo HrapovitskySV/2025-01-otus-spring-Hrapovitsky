@@ -35,7 +35,7 @@ public class SecurityConfiguration {
 
 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        return http
+        var res = http
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.ALWAYS))
 
@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                 .formLogin(Customizer.withDefaults())
                 .rememberMe(rm -> rm.key("key").tokenValiditySeconds(600))
                 .build();
+        return res;
     }
 
     @Bean

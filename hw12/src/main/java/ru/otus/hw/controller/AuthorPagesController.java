@@ -1,7 +1,6 @@
 package ru.otus.hw.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,10 +19,6 @@ public class AuthorPagesController {
 
     private final AuthorService authorService;
 
-    //private HttpServletRequest request;
-
-    //private HttpServletResponse response;
-
     @GetMapping("/authenticated/authors/")
     public String listAuthorsPage() {
         return "authorList";
@@ -41,6 +36,7 @@ public class AuthorPagesController {
         return "authorEdit";
     }
 
+    //пытаюсь пробросить JSESSIONID в запросы AJAX, которые делает браузер .fetch
     public void addSessionId(Model model, HttpServletRequest request) {
         var cookies = request.getCookies();
         if (!Objects.isNull(cookies)) {

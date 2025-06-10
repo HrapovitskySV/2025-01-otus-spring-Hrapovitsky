@@ -1,5 +1,6 @@
 package ru.otus.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +17,11 @@ import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
 import ru.otus.hw.models.Author;
+import ru.otus.hw.models.CustomUser;
+import ru.otus.hw.models.Role;
 import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
+import ru.otus.hw.services.CustomUserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,6 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(AuthorPagesController.class)
+@Import({SecurityConfiguration.class})
 class AuthorPagesControllerTest {
 
     @Autowired
@@ -39,12 +44,18 @@ class AuthorPagesControllerTest {
     @MockBean
     private AuthorService authorService;
 
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
+
     private final List<Author> authors = List.of(new Author(1L, "Пушкин"),
             new Author(2L, "Лермонтов"));
 
-    //@WithMockUser
-    //@WithUserDetails
-    //@WithAnonimousUser
+    @BeforeEach
+    void login(){
+        when(customUserDetailsService.loadUserByUsername(any())).
+                thenReturn(new CustomUser(1,"USER","1", List.of(new Role(1,"USER"))));
+    }
+
     @Test
     @WithMockUser(username = "USER",roles = {"USER"})
     void listAllAuthors() throws Exception {

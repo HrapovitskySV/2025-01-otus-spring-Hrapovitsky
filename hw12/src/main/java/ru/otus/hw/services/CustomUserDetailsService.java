@@ -12,7 +12,7 @@ import ru.otus.hw.repositories.CustomUserRepository;
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
-    final private CustomUserRepository customUserRepository;
+    private final CustomUserRepository customUserRepository;
 
     @Override
     public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {

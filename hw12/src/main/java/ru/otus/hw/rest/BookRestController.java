@@ -1,6 +1,7 @@
 package ru.otus.hw.rest;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -49,7 +50,7 @@ public class BookRestController {
     @PostMapping("/api/books")
     public ResponseEntity<Book> insertBook(@RequestBody BookDtoInputWeb bookDto) {
         Book savedBook = bookService.insert(bookDto.getTitle(), bookDto.getAuthor(), bookDto.getGenres());
-        return ResponseEntity.ok(savedBook);
+        return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedBook);
     }
 
     @DeleteMapping("/api/books/{id}")

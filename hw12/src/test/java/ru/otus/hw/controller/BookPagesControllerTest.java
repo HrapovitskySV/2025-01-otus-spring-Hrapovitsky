@@ -1,5 +1,6 @@
 package ru.otus.hw.controller;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -11,11 +12,11 @@ import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.exceptions.BookNotFoundException;
-import ru.otus.hw.models.Author;
-import ru.otus.hw.models.Book;
-import ru.otus.hw.models.Genre;
+import ru.otus.hw.models.*;
+import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.CustomUserDetailsService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(BookPagesController.class)
-@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class})//, AuthorService.class, GenreService.class
+@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class, SecurityConfiguration.class})//, AuthorService.class, GenreService.class
 class BookPagesControllerTest {
 
     @Autowired
@@ -43,9 +44,18 @@ class BookPagesControllerTest {
     @MockBean
     private GenreService genreService;
 
+    @MockBean
+    private CustomUserDetailsService customUserDetailsService;
+
 
     private final List<Book> books = List.of(new Book(1L, "Book1",null, new ArrayList<Genre>()),
             new Book(2L, "Book1", null,new ArrayList<Genre>()));
+
+    @BeforeEach
+    void login(){
+        when(customUserDetailsService.loadUserByUsername(any())).
+                thenReturn(new CustomUser(1,"USER","1", List.of(new Role(1,"USER"))));
+    }
 
     @Test
     @WithMockUser(username = "USER",roles = {"USER"})
