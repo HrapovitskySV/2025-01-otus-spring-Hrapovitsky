@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
+import ru.otus.hw.exceptions.EntityUsageException;
 import ru.otus.hw.models.Book;
 
 @RequiredArgsConstructor
@@ -16,14 +17,19 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     public void updateBookAuthors(String authorId, String authorFullName) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
         Update update = new Update().set("author.full_Name", authorFullName);
-        var wr = mongoTemplate.findAndModify(query,update, Book.class);
+        var wr = mongoTemplate.updateMulti(query,update, Book.class);
     }
 
     @Override
     public void deleteBookAuthors(String authorId) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
-        Update update = new Update().set("author", null);
-        var wr = mongoTemplate.findAndModify(query,update,Book.class);
+        //Update update = new Update().set("author", null);
+        //var wr = mongoTemplate.updateMulti(query,update,Book.class);
+        long c = mongoTemplate.count(query,Book.class);
+
+        if (c > 0) {
+            throw new EntityUsageException("One or all book found with authorId %s ".formatted(authorId));
+        }
     }
 
     @Override
