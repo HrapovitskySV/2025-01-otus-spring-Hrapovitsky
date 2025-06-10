@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>List of all books</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        .persons {
+            border: 1px solid steelblue;
+            width: 300px;
+            border-collapse: collapse;
+        }
+
+        .persons tr td, th {
+            padding: 5px;
+            border: 1px solid steelblue;
+        }
+
+        .persons td:last-child, td:first-child {
+            width: 50px;
+        }
+    </style>
+    <script>
+
+
+    function fillTable(books) {
+        let strTBody = ``
+        let tbody = document.getElementById(`tbody`)
+
+        books.forEach(book=>{
+            strTBody += `
+                <tr>
+                    <td>${book.id}</td>
+                    <td>${book.title}</td>
+                    <td>${book.author}</td>
+                    <td>${book.genres}</td>
+                    <td>
+                        <a href="/authenticated/edit/${book.id}">Edit</a>
+                    </td>
+                    <td>
+                        <button class="deleteBook" onclick="deleteBook(${book.id})">DELETE</button>
+                    </td>
+                </tr>
+            `})
+        tbody.innerHTML=strTBody
+    }
+
+    function getAllBooks() {
+        fetch("/api/books", {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+         })
+        .then(response => response.json())
+        .then(json => {fillTable(json)})
+    }
+
+  function deleteBook(id) {
+        fetch("/api/books/"+id, {
+            method: 'DELETE',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+         })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network error');
+            }
+            getAllBooks()
+        })
+    }
+    </script>
+</head>
+
+<body onload="getAllBooks()">
+<h3>Books:</h3>
+
+<a href = "add.html" th:href = "@{/authenticated/add}">Add new</a>
+
+<table class="books">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Genres</th>
+        <th>edit</th>
+        <th>delete</th>
+    </tr>
+    </thead>
+    <tbody id="tbody"/>
+</table>
+<p>
+<a href="authorList.html" th:href="@{/authenticated/authors/}">Авторы</a>
+</body>
+</html>

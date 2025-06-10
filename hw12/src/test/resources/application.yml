@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+  sql:
+    init:
+      mode: always
+      #data-locations: data2.sql
+      #schema-locations: schema.sql
+
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    generate-ddl: false
+
+    show-sql: true
+
+logging:
+  level:
+    ROOT: ERROR
