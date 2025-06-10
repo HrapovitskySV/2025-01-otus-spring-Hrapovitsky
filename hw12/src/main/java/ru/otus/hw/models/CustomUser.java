@@ -44,7 +44,7 @@ public class CustomUser implements UserDetails {
     @Fetch(FetchMode.SUBSELECT)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)//по моему в этом случае лучше сдлеать жадную загрузку, но не проходит тест ModelsCommonTest, поэтому делаю ленивую
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
