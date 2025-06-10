@@ -3,9 +3,12 @@ package ru.otus.hw.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
@@ -15,8 +18,11 @@ import ru.otus.hw.models.Genre;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
+import ru.otus.hw.repositories.CustomUserRepository;
+import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.CustomUserDetailsService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.*;
@@ -30,6 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
 @WebMvcTest(BookRestController.class)
+//@SpringBootTest
+//@DataJpaTest
 @Import({BookConverter.class, AuthorConverter.class, GenreConverter.class})//, AuthorService.class, GenreService.class
 class BookRestControllerTest {
 
@@ -55,6 +63,7 @@ class BookRestControllerTest {
             new Book(2L, "Book1", null,new ArrayList<Genre>()));
 
     @Test
+    @WithMockUser(username = "USER",roles = {"USER"})
     void listAllBooks() throws Exception {
         List<BookDto> expectedBooks = books.stream()
                 .map(book -> bookConverter.toDto(book)).toList();
@@ -67,6 +76,7 @@ class BookRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",roles = {"USER"})
     void getBookTest() throws Exception {
         var book = books.get(0);
         when(bookService.findById(1L)).thenReturn(Optional.of(book));
@@ -76,6 +86,7 @@ class BookRestControllerTest {
     }
 
     @Test
+    @WithMockUser(username = "USER",roles = {"USER"})
     void shouldCorrectSaveNewBook() throws Exception {
         Book book =  new Book(3L, "Book3", null,new ArrayList<Genre>());
         BookDtoInputWeb bookDtoInputWeb =  new BookDtoInputWeb(3L, "Book3", 0,new HashSet<Long>());

@@ -26,7 +26,7 @@
             const idInput = document.getElementById("id-input")
             const nameInput = document.getElementById("name-input")
             const author = {id: idInput.value, fullName: nameInput.value}
-            fetch("../../api/authors", {
+            fetch("../../../api/authors", {
                 method: '[[${method}]]',
                 headers: {
                   'Accept': 'application/json',

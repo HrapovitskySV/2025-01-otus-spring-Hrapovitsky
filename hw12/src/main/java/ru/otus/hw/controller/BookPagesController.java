@@ -40,7 +40,7 @@ public class BookPagesController {
         List<Genre> genres = genreService.findAll();
         model.addAttribute("genres", genres);
         model.addAttribute("method", "PUT");
-        model.addAttribute("redirectUrl", "../authenticated/");
+        model.addAttribute("redirectUrl", "/authenticated/");
 
 
         return "bookEdit";
@@ -58,7 +58,7 @@ public class BookPagesController {
         model.addAttribute("genres", genres);
 
         model.addAttribute("method", "POST");
-        model.addAttribute("redirectUrl", "./authenticated/");
+        model.addAttribute("redirectUrl", "/authenticated/");
 
         return "bookEdit";
     }

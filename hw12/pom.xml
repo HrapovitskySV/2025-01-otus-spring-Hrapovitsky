@@ -94,7 +94,8 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-test</artifactId>
-            <version>${spring-security.version}</version>
+            <!--<version>${spring-security.version}</version>-->
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -102,6 +103,12 @@
             <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
+        <!--<dependency>
+            <groupId>ru.otus.hw</groupId>
+            <artifactId>hw12-spring-security</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>-->
     </dependencies>
 
     <build>

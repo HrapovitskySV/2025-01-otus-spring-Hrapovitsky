@@ -33,7 +33,7 @@
 
             const book = {id: idInput.value, title: titleInput.value,author: authorInput.value, genres: genres}
 
-            fetch("/authenticated/api/books", {
+            fetch("/api/books", {
                 method: '[[${method}]]',
                 headers: {
                   'Accept': 'application/json',

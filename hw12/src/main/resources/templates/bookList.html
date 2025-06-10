@@ -49,7 +49,7 @@
     }
 
     function getAllBooks() {
-        fetch("/authenticated/api/books", {
+        fetch("/api/books", {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -61,7 +61,7 @@
     }
 
   function deleteBook(id) {
-        fetch("/authenticated/api/books/"+id, {
+        fetch("/api/books/"+id, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',
