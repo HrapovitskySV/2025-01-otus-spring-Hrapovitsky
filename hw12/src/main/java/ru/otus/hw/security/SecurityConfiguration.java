@@ -27,11 +27,13 @@ public class SecurityConfiguration {
     @Autowired
     private CustomUserDetailsService userDetailsService;
 
+
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> web.ignoring()
                 .requestMatchers(new AntPathRequestMatcher("/api/**"));
     }
+
 
 
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
