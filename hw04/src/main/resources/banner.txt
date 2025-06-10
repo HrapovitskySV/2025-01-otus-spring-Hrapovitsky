@@ -1,0 +1,26 @@
+
+
+
+   SSSSSSSSSSSSSSS
+ SS:::::::::::::::S
+S:::::SSSSSS::::::S
+S:::::S     SSSSSSS
+S:::::S                eeeeeeeeeeee    rrrrr   rrrrrrrrr      ggggggggg   ggggg    eeeeeeeeeeee  yyyyyyy           yyyyyyy
+S:::::S              ee::::::::::::ee  r::::rrr:::::::::r    g:::::::::ggg::::g  ee::::::::::::ee y:::::y         y:::::y
+ S::::SSSS          e::::::eeeee:::::eer:::::::::::::::::r  g:::::::::::::::::g e::::::eeeee:::::eey:::::y       y:::::y
+  SS::::::SSSSS    e::::::e     e:::::err::::::rrrrr::::::rg::::::ggggg::::::gge::::::e     e:::::e y:::::y     y:::::y
+    SSS::::::::SS  e:::::::eeeee::::::e r:::::r     r:::::rg:::::g     g:::::g e:::::::eeeee::::::e  y:::::y   y:::::y
+       SSSSSS::::S e:::::::::::::::::e  r:::::r     rrrrrrrg:::::g     g:::::g e:::::::::::::::::e    y:::::y y:::::y
+            S:::::Se::::::eeeeeeeeeee   r:::::r            g:::::g     g:::::g e::::::eeeeeeeeeee      y:::::y:::::y
+            S:::::Se:::::::e            r:::::r            g::::::g    g:::::g e:::::::e                y:::::::::y
+SSSSSSS     S:::::Se::::::::e           r:::::r            g:::::::ggggg:::::g e::::::::e                y:::::::y
+S::::::SSSSSS:::::S e::::::::eeeeeeee   r:::::r             g::::::::::::::::g  e::::::::eeeeeeee         y:::::y
+S:::::::::::::::SS   ee:::::::::::::e   r:::::r              gg::::::::::::::g   ee:::::::::::::e        y:::::y
+ SSSSSSSSSSSSSSS       eeeeeeeeeeeeee   rrrrrrr                gggggggg::::::g     eeeeeeeeeeeeee       y:::::y
+                                                                       g:::::g                         y:::::y
+                                                           gggggg      g:::::g                        y:::::y
+                                                           g:::::gg   gg:::::g                       y:::::y
+                                                            g::::::ggg:::::::g                      y:::::y
+                                                             gg:::::::::::::g                      yyyyyyy
+                                                               ggg::::::ggg
+                                                                  gggggg
