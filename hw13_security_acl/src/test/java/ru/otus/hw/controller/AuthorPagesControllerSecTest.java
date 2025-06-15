@@ -39,11 +39,11 @@ class AuthorPagesControllerSecTest {
 
      @Test
     void testAuthenticatedOnUser() throws Exception {
-        mvc.perform(get("/authors/").with(user("USER").roles("USER")))
+        mvc.perform(get("/authors/").with(user("ADMIN").roles("ADMIN")))
                 .andExpect(status().isOk());
-        mvc.perform(get("/authors/edit/1").with(user("USER").roles("USER")))
+        mvc.perform(get("/authors/edit/2").with(user("ADMIN").roles("ADMIN")))
                 .andExpect(status().isOk());
-        mvc.perform(get("/authors/add").with(user("USER").roles("USER")))
+        mvc.perform(get("/authors/add").with(user("ADMIN").roles("ADMIN")))
                 .andExpect(status().isOk());
     }
 

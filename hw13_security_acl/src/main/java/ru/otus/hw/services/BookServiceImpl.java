@@ -40,21 +40,10 @@ public class BookServiceImpl implements BookService {
     private  BookService bookService;
 
     @Override
-    //@PostAuthorize("if returnObject.isPresent()) { return hasPermission(returnObject.get(), 'READ')} else {return true}")
     @PostAuthorize("returnObject.isPresent() ? hasPermission(returnObject.get(), 'READ') : true")
     @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
-
-
-         var r = bookRepository.findById(id);
-        /*if (r.isPresent()) {
-            return hasPermission(returnObject.get(), 'READ');
-        } else {
-            return false;
-        }
-        */
-
-        return r;
+         return bookRepository.findById(id);
     }
 
     @Override
