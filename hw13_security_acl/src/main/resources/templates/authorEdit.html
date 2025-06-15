@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Edit author</title>
+    <style type="text/css">
+        body {
+            padding: 50px;
+        }
+
+        label {
+            display: inline-block;
+            width: 100px;
+        }
+
+        input:read-only {
+            background: lightgray;
+        }
+
+        .row {
+            margin-top: 10px;
+        }
+    </style>
+    <script>
+        function saveAuthor() {
+            const idInput = document.getElementById("id-input")
+            const nameInput = document.getElementById("name-input")
+            const author = {id: idInput.value, fullName: nameInput.value}
+            fetch("../../../api/authors", {
+                method: '[[${method}]]',
+                headers: {
+                  'Accept': 'application/json',
+                  'Content-Type': 'application/json',
+                  'cookie': 'JSESSIONID=[[${JSESSIONID}]]'
+                },
+                body: JSON.stringify(author)})
+            .then(response => {
+                if (!response.ok) {
+                    response.text().then(function (text) {
+                        let diverror = document.getElementById(`diverror`)
+                        diverror.innerHTML=text;
+                    });
+                    throw new Error('Network error');
+                }
+                document.location.href = '[[${redirectUrl}]]'
+               })
+        }
+    </script>
+</head>
+<body>
+
+<!-- Author edition -->
+<form id="edit-form" th:object="${author}">
+    <h3>Author Info:</h3>
+
+    <div class="row">
+        <label for="id-input">ID:</label>
+        <input id="id-input" type="text" readonly="readonly" value="1" th:value="*{id}"/>
+    </div>
+
+    <div class="row">
+        <label for="name-input">Name:</label>
+        <input id="name-input" name="fullName" type="text" value="John Doe" th:value="*{fullName}"/>
+    </div>
+
+    <div class="row">
+        <button type="button" onclick="saveAuthor()" >Save</button>
+        <a href="authorList.html" th:href="@{/authors/}"><button type="button">Cancel</button></a>
+    </div>
+    <div id="diverror"></div>
+</form>
+
+</body>
+</html>
