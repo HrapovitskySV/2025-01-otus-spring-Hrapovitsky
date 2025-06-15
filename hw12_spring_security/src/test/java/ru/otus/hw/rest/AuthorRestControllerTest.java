@@ -1,29 +1,16 @@
 package ru.otus.hw.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import static org.mockito.BDDMockito.given;
 import ru.otus.hw.models.Author;
-import ru.otus.hw.models.CustomUser;
-import ru.otus.hw.models.Role;
-import ru.otus.hw.repositories.CustomUserRepository;
-import ru.otus.hw.repositories.RoleRepository;
-import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
-import ru.otus.hw.services.CustomUserDetailsService;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +21,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(AuthorRestController.class)
-@Import({SecurityConfiguration.class})
+@WebMvcTest(value = AuthorRestController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)// отключаю  Security в функциональных тестах
 class AuthorRestControllerTest {
 
     @Autowired
@@ -47,17 +33,11 @@ class AuthorRestControllerTest {
     @MockBean
     private AuthorService authorService;
 
-    @MockBean
-    private CustomUserDetailsService customUserDetailsService;
 
     private final List<Author> authors = List.of(new Author(1L, "Пушкин"),
             new Author(2L, "Лермонтов"));
 
-    @BeforeEach
-    void login(){
-        when(customUserDetailsService.loadUserByUsername(any())).
-                thenReturn(new CustomUser(1,"USER","1", List.of(new Role(1,"USER"))));
-    }
+
 
     @Test
     void listAllAuthors() throws Exception {

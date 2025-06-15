@@ -25,12 +25,12 @@ public class BookPagesController {
 
     private final GenreService genreService;
 
-    @GetMapping("/authenticated/")
+    @GetMapping("/")
     public String listAllBooks(Model model) {
         return "bookList";
     }
 
-    @GetMapping("/authenticated/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String editPage(@PathVariable("id") long id, Model model) {
         Book book = bookService.findById(id).orElseThrow(BookNotFoundException::new);
         model.addAttribute("book", book);
@@ -40,14 +40,14 @@ public class BookPagesController {
         List<Genre> genres = genreService.findAll();
         model.addAttribute("genres", genres);
         model.addAttribute("method", "PUT");
-        model.addAttribute("redirectUrl", "/authenticated/");
+        model.addAttribute("redirectUrl", "/");
 
 
         return "bookEdit";
     }
 
 
-    @GetMapping("/authenticated/add")
+    @GetMapping("/add")
     public String insertBook(Model model) {
         Book book = new Book(0,null,null,new ArrayList<Genre>());
 
@@ -58,7 +58,7 @@ public class BookPagesController {
         model.addAttribute("genres", genres);
 
         model.addAttribute("method", "POST");
-        model.addAttribute("redirectUrl", "/authenticated/");
+        model.addAttribute("redirectUrl", "/");
 
         return "bookEdit";
     }

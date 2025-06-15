@@ -55,7 +55,7 @@
                         <td>${author.id}</td>
                         <td>${author.fullName}</td>
                         <td>
-                            <a href="/authenticated/authors/edit/${author.id}">Edit</a>
+                            <a href="/authors/edit/${author.id}">Edit</a>
                         </td>
                     </tr>
                 `})
@@ -80,7 +80,7 @@
 
 <h3>Authors:</h3>
 
-<a href = "add.html" th:href = "@{/authenticated/authors/add}">Add new</a>
+<a href = "add.html" th:href = "@{/authors/add}">Add new</a>
 <table class="authors">
     <thead>
     <tr>
@@ -93,6 +93,6 @@
 </table>
 
 <p>
-    <a href="bookList.html" th:href="@{/authenticated/}">Книги</a>
+    <a href="bookList.html" th:href="@{/}">Книги</a>
 </body>
 </html>

@@ -1,31 +1,23 @@
 package ru.otus.hw.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.otus.hw.converters.AuthorConverter;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.models.Book;
-import ru.otus.hw.models.CustomUser;
 import ru.otus.hw.models.Genre;
-import ru.otus.hw.models.Role;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
-import ru.otus.hw.repositories.CustomUserRepository;
-import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.CustomUserDetailsService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.*;
@@ -38,8 +30,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 
-@WebMvcTest(BookRestController.class)
-@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class, SecurityConfiguration.class})
+
+@WebMvcTest(value = BookRestController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)// отключаю  Security в функциональных тестах
+@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class})
 class BookRestControllerTest {
 
     @Autowired
@@ -60,18 +53,9 @@ class BookRestControllerTest {
     @Autowired
     private ObjectMapper mapper;
 
-    @MockBean
-    private CustomUserDetailsService customUserDetailsService;
-
-
     private final List<Book> books = List.of(new Book(1L, "Book1",null, new ArrayList<Genre>()),
             new Book(2L, "Book1", null,new ArrayList<Genre>()));
 
-    @BeforeEach
-    void login(){
-        when(customUserDetailsService.loadUserByUsername(any())).
-                thenReturn(new CustomUser(1,"USER","1", List.of(new Role(1,"USER"))));
-    }
 
     @Test
     void listAllBooks() throws Exception {
