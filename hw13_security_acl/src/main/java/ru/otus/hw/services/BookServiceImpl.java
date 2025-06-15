@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.acls.domain.BasePermission;
@@ -39,9 +40,21 @@ public class BookServiceImpl implements BookService {
     private  BookService bookService;
 
     @Override
+    //@PostAuthorize("if returnObject.isPresent()) { return hasPermission(returnObject.get(), 'READ')} else {return true}")
+    @PostAuthorize("returnObject.isPresent() ? hasPermission(returnObject.get(), 'READ') : true")
     @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
-        return bookRepository.findById(id);
+
+
+         var r = bookRepository.findById(id);
+        /*if (r.isPresent()) {
+            return hasPermission(returnObject.get(), 'READ');
+        } else {
+            return false;
+        }
+        */
+
+        return r;
     }
 
     @Override

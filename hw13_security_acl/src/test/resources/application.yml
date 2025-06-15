@@ -15,7 +15,8 @@ spring:
     generate-ddl: false
 
     show-sql: true
-
+  main:
+    allow-circular-references: true
 logging:
   level:
     ROOT: ERROR
