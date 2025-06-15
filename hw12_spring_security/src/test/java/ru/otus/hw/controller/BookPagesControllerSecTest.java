@@ -46,7 +46,7 @@ class BookPagesControllerSecTest {
     }
 
     @Test
-    void testAuthorListWithoutAuth() throws Exception {
+    void testBookListWithoutAuth() throws Exception {
         mvc.perform(get("/"))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
