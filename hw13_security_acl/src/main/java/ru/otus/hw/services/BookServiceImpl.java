@@ -2,6 +2,7 @@ package ru.otus.hw.services;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.acls.domain.BasePermission;
@@ -34,6 +35,9 @@ public class BookServiceImpl implements BookService {
 
     private final AclServiceWrapperService aclServiceWrapperService;
 
+    @Autowired
+    private  BookService bookService;
+
     @Override
     @Transactional(readOnly = true)
     public Optional<Book> findById(long id) {
@@ -43,8 +47,14 @@ public class BookServiceImpl implements BookService {
     @Override
     @PostFilter("hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
+    public List<Book> findAllBook() {
+        return bookRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public List<BookDto> findAll() {
-        var books = bookRepository.findAll();
+        var books = bookService.findAllBook();
         return books.stream().map(bookConverter::toDto).toList();
 
     }
@@ -67,6 +77,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional()
+    @PreAuthorize("hasPermission(#message, 'DELETE')")
     public void deleteById(long id) {
         bookRepository.deleteById(id);
     }
