@@ -1,6 +1,7 @@
 package ru.otus.hw.controller;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -18,9 +19,9 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@WebMvcTest(BookPagesController.class)
+@WebMvcTest({BookPagesController.class, AuthorPagesController.class})
 @Import({BookConverter.class, AuthorConverter.class, GenreConverter.class, SecurityConfiguration.class})// включаю настройки Security  //, AuthorService.class, GenreService.class
-class BookPagesControllerSecTest {
+class PagesControllerSecurityTest {
 
     @Autowired
     private MockMvc mvc;
@@ -35,19 +36,17 @@ class BookPagesControllerSecTest {
     private GenreService genreService;
 
 
-    @Test
-    void testAuthenticatedOnUser() throws Exception {
-        mvc.perform(get("/").with(user("USER").roles("USER")))
-                .andExpect(status().isOk());
-        mvc.perform(get("/edit/1").with(user("USER").roles("USER")))
-                .andExpect(status().isOk());
-        mvc.perform(get("/add").with(user("USER").roles("USER")))
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/edit/1", "/add","/authors/", "/authors/edit/1", "/authors/add"})
+    void testAuthenticatedOnUser(String url) throws Exception {
+        mvc.perform(get(url).with(user("USER").roles("USER")))
                 .andExpect(status().isOk());
     }
 
-    @Test
-    void testBookListWithoutAuth() throws Exception {
-        mvc.perform(get("/"))
+    @ParameterizedTest
+    @ValueSource(strings = {"/", "/edit/1", "/add","/authors/", "/authors/edit/1", "/authors/add"})
+    void testBookListWithoutAuth(String url) throws Exception {
+        mvc.perform(get(url))
                 .andExpect(status().isFound())
                 .andExpect(redirectedUrlPattern("**/login"));
     }
