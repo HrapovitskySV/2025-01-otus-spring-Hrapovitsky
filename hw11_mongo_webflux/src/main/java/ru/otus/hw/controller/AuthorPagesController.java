@@ -32,7 +32,7 @@ public class AuthorPagesController {
         return Mono.just(Rendering.view("authorEdit.html")
                 .modelAttribute("author", author)
                 .modelAttribute("method", "POST")
-                .modelAttribute("redirectUrl", "../")
+                .modelAttribute("redirectUrl", "/authors/")
                 .build());
     }
 
@@ -43,7 +43,7 @@ public class AuthorPagesController {
         return Mono.just(Rendering.view("authorEdit")
                 .modelAttribute("author", author)
                 .modelAttribute("method", "PUT")
-                .modelAttribute("redirectUrl", "../")
+                .modelAttribute("redirectUrl", "/authors/")
                 .build());
     }
 }
