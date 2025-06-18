@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.exceptions.EntityNotFoundException;
+import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
@@ -53,6 +54,9 @@ public class BookServiceImpl implements BookService {
 
     }
 
+    private Mono<Author> authorNotFound(String authorId) {
+        throw new EntityNotFoundException("Author with id %s not found".formatted(authorId));
+    }
 
     @Transactional
     public Mono<Book> save(String id, String title, String authorId, Set<String> genresId) {
@@ -64,12 +68,14 @@ public class BookServiceImpl implements BookService {
             if (genresId.size() != genreList.size()) {
                 throw new EntityNotFoundException("One or all genres with ids %s not found".formatted(genresId));
             }
-            return authorRepository.findById(authorId).flatMap(author -> {
-                if (author == null) {
-                    throw new EntityNotFoundException("Author with id %s not found".formatted(authorId));
-                }
-                var book = new Book(id, title, author, genreList);
-                return bookRepository.save(book);
+            return authorRepository.findById(authorId)
+                            .switchIfEmpty(Mono.defer(() -> authorNotFound(authorId)))
+                            .flatMap(author -> {
+                                if (author == null) {
+                                    throw new EntityNotFoundException("Author with id %s not found".formatted(authorId));
+                                }
+                                var book = new Book(id, title, author, genreList);
+                                return bookRepository.save(book);
             });
 
         });
