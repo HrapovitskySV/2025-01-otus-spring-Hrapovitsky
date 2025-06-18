@@ -14,7 +14,13 @@ de:
       embedded:
         version: 4.0.2
 
-
+junit:
+  jupiter:
+    execution:
+      parallel:
+        enabled: true
+        mode:
+          default: concurrent
 logging:
   level:
     ROOT: ERROR
