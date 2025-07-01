@@ -16,27 +16,27 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     public void updateBookAuthors(String authorId, String authorFullName) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
         Update update = new Update().set("author.full_Name", authorFullName);
-        var wr = mongoTemplate.findAndModify(query,update, Book.class);
+        var wr = mongoTemplate.findAndModify(query,update, Book.class).subscribe();
     }
 
     @Override
     public void deleteBookAuthors(String authorId) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
         Update update = new Update().set("author", null);
-        var wr = mongoTemplate.findAndModify(query,update,Book.class);
+        var wr = mongoTemplate.findAndModify(query,update,Book.class).subscribe();
     }
 
     @Override
     public void updateBookGenre(String genreId, String genreName) {
         Query query = new Query(Criteria.where("genres._id").is(genreId));
         Update update = new Update().set("genres.$.name", genreName);
-        var wr = mongoTemplate.updateMulti(query,update, Book.class);
+        var wr = mongoTemplate.updateMulti(query,update, Book.class).subscribe();
     }
 
     @Override
     public void deleteBookGenre(String genreId) {
         Query query = new Query(Criteria.where("genres._id").is(genreId));
         Update update = new Update().pull("genres", new Query(Criteria.where("._id").is(genreId)));
-        var wr = mongoTemplate.updateMulti(query,update,Book.class);
+        var wr = mongoTemplate.updateMulti(query,update,Book.class).subscribe();
     }
 }
