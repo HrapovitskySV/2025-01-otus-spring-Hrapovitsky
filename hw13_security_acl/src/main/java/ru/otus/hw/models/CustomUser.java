@@ -44,11 +44,7 @@ public class CustomUser implements UserDetails {
     @Fetch(FetchMode.SUBSELECT)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    //по моему в этом случае лучше сдлеать жадную загрузку, но не проходит тест ModelsCommonTest, поэтому делаю ленивую
-    //нет все таки жадная т.к org.hibernate.LazyInitializationException:
-    //    failed to lazily initialize a collection of role: ru.otus.hw.models.CustomUser.roles:
-    //    could not initialize proxy - no Session
-    @ManyToMany(targetEntity = Role.class, fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
