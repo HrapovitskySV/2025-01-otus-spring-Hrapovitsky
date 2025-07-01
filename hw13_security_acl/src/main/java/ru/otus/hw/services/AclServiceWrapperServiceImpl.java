@@ -12,6 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class AclServiceWrapperServiceImpl implements AclServiceWrapperService {
 
@@ -22,7 +24,7 @@ public class AclServiceWrapperServiceImpl implements AclServiceWrapperService {
     }
 
     @Override
-    public void createPermission(Object object, Permission permission) {
+    public void createPermission(Object object, List<Permission> permissions) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final Sid owner = new PrincipalSid(authentication);
         ObjectIdentity oid = new ObjectIdentityImpl(object);
@@ -30,8 +32,10 @@ public class AclServiceWrapperServiceImpl implements AclServiceWrapperService {
         final Sid admin = new GrantedAuthoritySid("ROLE_ADMIN");
 
         MutableAcl acl = mutableAclService.createAcl(oid);
-        acl.insertAce(acl.getEntries().size(), permission, owner, true);
-        acl.insertAce(acl.getEntries().size(), permission, admin, true);
+        for (Permission permission: permissions) {
+            acl.insertAce(acl.getEntries().size(), permission, owner, true);
+            acl.insertAce(acl.getEntries().size(), permission, admin, true);
+        }
         mutableAclService.updateAcl(acl);
     }
 }

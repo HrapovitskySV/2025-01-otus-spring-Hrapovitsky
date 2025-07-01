@@ -25,7 +25,7 @@ INSERT INTO roles(id, name)
   VALUES (1, 'ROLE_USER'), (2, 'ROLE_ADMIN');
 
 insert into users_roles(user_id, role_id)
-values (1, 1),   (2, 2);
+values (1, 1), (2, 2);
 
 
 INSERT INTO acl_sid (id, principal, sid) VALUES
@@ -43,10 +43,15 @@ INSERT INTO acl_object_identity (id, object_id_class, object_id_identity, parent
 
 INSERT INTO acl_entry (id, acl_object_identity, ace_order, sid, mask,
                        granting, audit_success, audit_failure) VALUES
-(1, 1, 1, 1, 1, 1, 1, 1),
-(2, 1, 2, 1, 2, 1, 1, 1),
-(3, 1, 3, 3, 1, 1, 1, 1),
+--книга 1
+(1, 1, 1, 1, 1, 1, 1, 1),--ADMIN READ
+--(2, 1, 2, 1, 15, 1, 1, 1),--ADMIN FULL
+(2, 1, 2, 1, 2, 1, 1, 1),--ADMIN WRITE
+(8, 1, 4, 1, 8, 1, 1, 1),--ADMIN DELETE
+(3, 1, 3, 3, 1, 1, 1, 1),--ROLE_ADMIN READ
+--книга 2
 (4, 2, 1, 2, 1, 1, 1, 1),
 (5, 2, 2, 3, 1, 1, 1, 1),
+--книга 3
 (6, 3, 1, 3, 1, 1, 1, 1),
 (7, 3, 2, 3, 2, 1, 1, 1);

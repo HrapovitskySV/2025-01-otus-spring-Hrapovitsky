@@ -67,6 +67,13 @@ public class AclMethodSecurityExpressionRoot extends SecurityExpressionRoot
         return isGranted(targetId, targetClass, read);
     }
 
+    @Override
+    public boolean canUpdate(Object targetId, Class<?> targetClass, boolean isNew) {
+        return isGranted(targetId, targetClass, write);
+    }
+
+
+
     boolean isGranted(Object targetId, Class<?> targetClass, Object permission) {
 
         return hasPermission(targetId, targetClass.getCanonicalName(), permission);

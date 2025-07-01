@@ -9,4 +9,7 @@ public interface AclMethodSecurityExpressionOperations extends MethodSecurityExp
     boolean isAdministrator(Object target);
 
     boolean canRead(Object targetId, Class<?> targetClass);
+
+    boolean canUpdate(Object targetId, Class<?> targetClass, boolean isNew);
+
 }

@@ -3,6 +3,7 @@ package ru.otus.hw.services;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +38,7 @@ public class BookServiceImpl implements BookService {
     private final AclServiceWrapperService aclServiceWrapperService;
 
     @Autowired
+    //делаю самоинжекцию, поэтому не через конструктор. Самоинжекция нужна, чтобы работали директивы через проксирование
     private  BookService bookService;
 
     @Override
@@ -65,30 +67,48 @@ public class BookServiceImpl implements BookService {
     @Transactional()
     public Book insert(String title, long authorId, Set<Long> genresIds) {
         var savedBook = save(0, title, authorId, genresIds);
-        aclServiceWrapperService.createPermission(savedBook, BasePermission.READ);
+
+        aclServiceWrapperService.createPermission(savedBook,
+                List.of(BasePermission.READ,BasePermission.WRITE,BasePermission.DELETE));
 
         return savedBook;
     }
 
     @Override
-    @PreAuthorize("hasPermission(#message, 'WRITE')")
     @Transactional()
     public Book update(long id, String title, long authorId, Set<Long> genresIds) {
         return save(id, title, authorId, genresIds);
     }
 
+
     @Override
     @Transactional()
-    @PreAuthorize("hasPermission(#message, 'DELETE')")
-    public void deleteById(long id) {
-        bookRepository.deleteById(id);
+    @PreAuthorize("hasPermission(#book, 'DELETE')")
+    public void delete(@Param("book")Book book) {
+        bookRepository.delete(book);
     }
 
     @Override
-    public Book save(Book book) {
+    @Transactional()
+    public void deleteById(long id) {
+        var book = new Book(id,null,null,null);
+        bookService.delete(book);
+    }
+
+
+    @Override
+    @PreAuthorize("hasPermission(#book, 'WRITE')")
+    public Book save(@Param("book")Book book) {
         return bookRepository.save(book);
     }
 
+
+    @Override
+    //@PreAuthorize("hasPermission(#book, 'CREATE')") // не понимаю как даются права на создание нового объекта,
+    // наверное эо право только для отнятия, такая возможность тоже есть
+    public Book create(@Param("book")Book book) {
+        return bookRepository.save(book);
+    }
 
     private Book save(long id, String title, long authorId, Set<Long> genresIds) {
         if (isEmpty(genresIds)) {
@@ -103,6 +123,10 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = new Book(id, title, author, genres);
-        return bookRepository.save(book);
+        if (id == 0) {
+            return bookService.create(book);
+        } else {
+            return bookService.save(book);
+        }
     }
 }
