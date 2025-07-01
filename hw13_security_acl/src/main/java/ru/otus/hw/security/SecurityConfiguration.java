@@ -27,6 +27,7 @@ public class SecurityConfiguration {
                     authorize
                             //.requestMatchers(HttpMethod.POST,"/api/**").not().fullyAuthenticated()
                             .requestMatchers("/authors/**").hasRole("ADMIN")
+                            .requestMatchers("/api/authors/**").hasRole("ADMIN")
                             .anyRequest().authenticated();
                 })
                 //.httpBasic(Customizer.withDefaults())
