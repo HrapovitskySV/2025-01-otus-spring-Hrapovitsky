@@ -12,7 +12,7 @@ import java.sql.SQLException;
 @EnableMongoRepositories
 @SpringBootApplication
 public class Application {
-	// --spring.shell.interactive.enabled=false --spring.batch.job.enabled=true inputFileName=entries.csv outputFileName=output_new.dat
+	// --spring.shell.interactive.enabled=false --spring.batch.job.enabled=true
 	public static void main(String[] args) throws SQLException {
 		SpringApplication.run(Application.class, args);
 		Console.main(args);
