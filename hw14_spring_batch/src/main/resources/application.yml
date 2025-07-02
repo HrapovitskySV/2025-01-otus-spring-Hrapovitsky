@@ -71,7 +71,7 @@ server:
 
 logging:
   level:
-    #root: ERROR
-    root: INFO
+    root: ERROR
+    #root: INFO
     Batch: INFO
     ru.otus.example.springbatch: INFO

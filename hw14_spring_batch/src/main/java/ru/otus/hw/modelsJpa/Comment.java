@@ -24,10 +24,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Стратегия генерации идентификаторов
     private long id;
 
+    /*
     @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
     @EqualsAndHashCode.Exclude
     @JoinColumn(name = "book_id")
     private Book book;
+
+     */
+    @Column(name = "book_id")
+    private long bookId;
+
 
     @Column(name = "comment", nullable = false, unique = false)
     private String comment;

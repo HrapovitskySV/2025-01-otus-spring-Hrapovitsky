@@ -11,6 +11,7 @@ import org.springframework.shell.standard.ShellMethod;
 
 import java.util.Properties;
 
+import static java.time.LocalTime.now;
 import static ru.otus.hw.config.JobConfig.IMPORT_BOOK_JOB_NAME;
 
 @RequiredArgsConstructor
@@ -40,9 +41,10 @@ public class BatchCommands {
  */
 
     @SuppressWarnings("unused")
-    @ShellMethod(value = "startMigrationJobWithJobOperator", key = "sm-jo")
+    @ShellMethod(value = "startMigrationJobWithJobOperator", key = "c")
     public void startMigrationJobWithJobOperator() throws Exception {
         Properties properties = new Properties();
+        properties.put("key", Integer.toString(now().getNano()));
         //properties.put(INPUT_FILE_NAME, appProps.getInputFile());
         //properties.put(OUTPUT_FILE_NAME, appProps.getOutputFile());
 
