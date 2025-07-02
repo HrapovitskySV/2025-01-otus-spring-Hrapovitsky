@@ -1,7 +1,5 @@
 package ru.otus.hw.processors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -23,9 +21,7 @@ public class CommentItemProcessor implements ItemProcessor<CommentMongo, Comment
     public CommentItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapIdBook) {
         this.mapIdBook = mapIdBook;
 
-
         jdbcTemplate
-
                 .query("SELECT max(id) as c FROM comments", new CountMapper())
                 .forEach(count -> this.lastId = count);
 
@@ -39,8 +35,8 @@ public class CommentItemProcessor implements ItemProcessor<CommentMongo, Comment
 
     public Integer getMapId(Map<String, Integer> mapId, String mongoId) {
         var id = mapId.get(mongoId);
-        if ( isNull(id) ){
-            throw new EntityNotFoundException("Not found SQL id book for MongoID "+mongoId);
+        if (isNull(id)) {
+            throw new EntityNotFoundException("Not found SQL id book for MongoID " + mongoId);
         }
         return id;
     }

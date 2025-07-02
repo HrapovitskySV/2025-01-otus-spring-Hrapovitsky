@@ -5,7 +5,11 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.ChunkListener;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
@@ -49,7 +53,6 @@ import ru.otus.hw.modelsMongo.AuthorMongo;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -57,16 +60,15 @@ import java.util.Map;
 @Configuration
 @RequiredArgsConstructor
 public class JobConfig {
+    public static final String IMPORT_BOOK_JOB_NAME = "importBookJob";
+
     private static final int CHUNK_SIZE = 20;
 
     private final Logger logger = LoggerFactory.getLogger("Batch");
 
-    public static final String IMPORT_BOOK_JOB_NAME = "importBookJob";
 
     @PersistenceContext
     private final EntityManager em;
-
-
 
     private final EntityManager entityManager;
 
@@ -146,56 +148,6 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(new ItemReadListener<AuthorMongo>() {
-
-                    public void beforeRead() {
-                     //   logger.info("Начало чтения авторов");
-                    }
-
-                    public void afterRead(@NonNull AuthorMongo o) {
-                      //  logger.info("Конец чтения авторов: "+count);
-                    }
-
-                    public void onRead(@NonNull AuthorMongo o) {
-                        //super.onRead(o);
-                    }
-
-
-                    public void onReadError(@NonNull Exception e) {
-                    //    logger.info("Ошибка чтения авторов");
-                    }
-                })
-                .listener(new ItemWriteListener<Author>() {
-                    public void beforeWrite(@NonNull List<Author> list) {
-                        logger.info("Начало записи авторов");
-                    }
-
-                    public void afterWrite(@NonNull List<Author> list) {
-                        logger.info("Конец записи авторов");
-                    }
-
-                    public void onWrite(@NonNull List<Author> list) {
-                        logger.info("Запись авторов");
-                    }
-
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List<Author> list) {
-                     //   logger.info("Ошибка записи авторов");
-                    }
-                })
-                .listener(new ItemProcessListener<>() {
-                    public void beforeProcess(@NonNull AuthorMongo o) {
-                       // logger.info("Начало обработки авторов");
-                    }
-
-                    public void afterProcess(@NonNull AuthorMongo o, Author o2) {
-                        //logger.info("Конец обработки авторов");
-                    }
-
-                    public void onProcessError(@NonNull AuthorMongo o, @NonNull Exception e) {
-                        //logger.info("Ошибка обработки авторов");
-                    }
-                })
                 .listener(getChunkListener("авторов"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
@@ -329,24 +281,6 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(new ItemWriteListener<Book>() {
-                    public void beforeWrite(@NonNull List<Book> list) {
-                        logger.info("Начало записи книги");
-                    }
-
-                    public void afterWrite(@NonNull List<Book> list) {
-                        logger.info("Конец записи книги");
-                    }
-
-                    public void onWrite(@NonNull List<Book> list) {
-                        logger.info("Запись книги");
-                    }
-
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List<Book> list) {
-                        logger.info("Ошибка записи книги");
-                    }
-                })
                 .listener(getChunkListener("книг"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();

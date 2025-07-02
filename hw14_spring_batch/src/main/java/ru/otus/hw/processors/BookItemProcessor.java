@@ -1,7 +1,5 @@
 package ru.otus.hw.processors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import ru.otus.hw.exceptions.EntityNotFoundException;
@@ -9,15 +7,11 @@ import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.modelsJpa.Book;
 import ru.otus.hw.modelsJpa.Genre;
 import ru.otus.hw.modelsMongo.BookMongo;
-import ru.otus.hw.modelsMongo.GenreMongo;
 import ru.otus.hw.services.CountMapper;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
-import static java.util.stream.Collectors.toList;
 
 public class BookItemProcessor implements ItemProcessor<BookMongo, Book> {
 
@@ -29,7 +23,11 @@ public class BookItemProcessor implements ItemProcessor<BookMongo, Book> {
 
     private final Map<String, Integer> mapIdGenre;
 
-    public BookItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapIdAuthor, Map<String, Integer> mapIdGenre, Map<String, Integer> mapIdBook) {
+    public BookItemProcessor(JdbcTemplate jdbcTemplate,
+                             Map<String, Integer> mapIdAuthor,
+                             Map<String, Integer> mapIdGenre,
+                             Map<String, Integer> mapIdBook) {
+
         this.mapIdAuthor = mapIdAuthor;
         this.mapIdGenre = mapIdGenre;
         this.mapIdBook = mapIdBook;
@@ -51,8 +49,8 @@ public class BookItemProcessor implements ItemProcessor<BookMongo, Book> {
 
     public Integer getMapId(Map<String, Integer> mapId, String mongoId) {
         var id = mapId.get(mongoId);
-        if ( isNull(id) ){
-            throw new EntityNotFoundException("Not found SQL id for MongoID "+mongoId);
+        if (isNull(id)) {
+            throw new EntityNotFoundException("Not found SQL id for MongoID " + mongoId);
         }
         return id;
     }
