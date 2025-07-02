@@ -9,16 +9,14 @@ import ru.otus.hw.modelsMongo.AuthorMongo;
 import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.services.CountMapper;
 
-import java.util.HashMap;
+import java.util.Map;
 
 public class AuthorItemProcessor implements ItemProcessor<AuthorMongo, Author> {
 
-    private static final Logger log = LoggerFactory.getLogger(AuthorItemProcessor.class);
-
     private int lastId;
-    private final HashMap<String, Integer> mapId;
+    private final Map<String, Integer> mapId;
 
-    public AuthorItemProcessor(JdbcTemplate jdbcTemplate, HashMap<String, Integer> mapId) {
+    public AuthorItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapId) {
         this.mapId = mapId;
 
         jdbcTemplate

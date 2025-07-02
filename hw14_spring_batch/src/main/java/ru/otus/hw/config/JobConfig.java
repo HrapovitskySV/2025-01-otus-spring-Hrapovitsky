@@ -58,12 +58,15 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class JobConfig {
     private static final int CHUNK_SIZE = 20;
+
     private final Logger logger = LoggerFactory.getLogger("Batch");
+
+    public static final String IMPORT_BOOK_JOB_NAME = "importBookJob";
 
     @PersistenceContext
     private final EntityManager em;
 
-    public static final String IMPORT_BOOK_JOB_NAME = "importBookJob";
+
 
     private final EntityManager entityManager;
 
@@ -73,11 +76,11 @@ public class JobConfig {
 
     private final MongoTemplate mongoTemplate;
 
-    private final HashMap<String, Integer> mapIdAuthor = new HashMap<String, Integer>();
+    private final Map<String, Integer> mapIdAuthor = new HashMap<String, Integer>();
 
-    private final HashMap<String, Integer> mapIdGenre = new HashMap<String, Integer>();
+    private final Map<String, Integer> mapIdGenre = new HashMap<String, Integer>();
 
-    private final HashMap<String, Integer> mapIdBook = new HashMap<String, Integer>();
+    private final Map<String, Integer> mapIdBook = new HashMap<String, Integer>();
 
 
     @Autowired
@@ -135,7 +138,8 @@ public class JobConfig {
     }
 
     @Bean
-    public Step transformAuthorsStep(MongoPagingItemReader<AuthorMongo> reader, JdbcBatchItemWriter<Author> writer,
+    public Step transformAuthorsStep(MongoPagingItemReader<AuthorMongo> reader,
+                                     JdbcBatchItemWriter<Author> writer,
                                      ItemProcessor<AuthorMongo, Author> itemProcessor) {
         return new StepBuilder("transformAuthorsStep", jobRepository)
                 .<AuthorMongo, Author>chunk(CHUNK_SIZE, platformTransactionManager)
@@ -143,7 +147,6 @@ public class JobConfig {
                 .processor(itemProcessor)
                 .writer(writer)
                 .listener(new ItemReadListener<AuthorMongo>() {
-                    int count=0;
 
                     public void beforeRead() {
                      //   logger.info("Начало чтения авторов");
@@ -154,7 +157,6 @@ public class JobConfig {
                     }
 
                     public void onRead(@NonNull AuthorMongo o) {
-                        count=count+1;
                         //super.onRead(o);
                     }
 
@@ -170,7 +172,6 @@ public class JobConfig {
 
                     public void afterWrite(@NonNull List<Author> list) {
                         logger.info("Конец записи авторов");
-                        System.out.println(list.toString());
                     }
 
                     public void onWrite(@NonNull List<Author> list) {
@@ -195,20 +196,7 @@ public class JobConfig {
                         //logger.info("Ошибка обработки авторов");
                     }
                 })
-                .listener(new ChunkListener() {
-                    public void beforeChunk(@NonNull ChunkContext chunkContext) {
-                        logger.info("Начало пачки авторов");
-                    }
-
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        var StepExecution = chunkContext.getStepContext().getStepExecution();
-                        logger.info("Конец пачки авторов. Read count: "+StepExecution.getReadCount()+" write count: "+StepExecution.getWriteCount());
-                    }
-
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки авторов");
-                    }
-                })
+                .listener(getChunkListener("авторов"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
@@ -252,17 +240,7 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-
-                .listener(new ChunkListener() {
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        var StepExecution = chunkContext.getStepContext().getStepExecution();
-                        logger.info("Конец пачки жанров. Read count: "+StepExecution.getReadCount()+" write count: "+StepExecution.getWriteCount());
-                    }
-
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки жанров");
-                    }
-                })
+                .listener(getChunkListener("жанров"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
@@ -306,17 +284,7 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-
-                .listener(new ChunkListener() {
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        var StepExecution = chunkContext.getStepContext().getStepExecution();
-                        logger.info("Конец пачки комментариев. Read count: "+StepExecution.getReadCount()+" write count: "+StepExecution.getWriteCount());
-                    }
-
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки комментариев");
-                    }
-                })
+                .listener(getChunkListener("комментариев"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
@@ -346,7 +314,7 @@ public class JobConfig {
 
     @StepScope
     @Bean
-    public JpaItemWriter<Book> ItemWriterBook() {
+    public JpaItemWriter<Book> itemWriterBook() {
         return new JpaItemWriterBuilder<Book>()
                 .entityManagerFactory(em.getEntityManagerFactory())
                 .usePersist(false)
@@ -368,7 +336,6 @@ public class JobConfig {
 
                     public void afterWrite(@NonNull List<Book> list) {
                         logger.info("Конец записи книги");
-                        System.out.println(list.toString());
                     }
 
                     public void onWrite(@NonNull List<Book> list) {
@@ -380,18 +347,24 @@ public class JobConfig {
                         logger.info("Ошибка записи книги");
                     }
                 })
-                .listener(new ChunkListener() {
-                    public void afterChunk(@NonNull ChunkContext chunkContext) {
-                        var StepExecution = chunkContext.getStepContext().getStepExecution();
-                        logger.info("Конец пачки книг. Read count: "+StepExecution.getReadCount()+" write count: "+StepExecution.getWriteCount());
-                    }
-
-                    public void afterChunkError(@NonNull ChunkContext chunkContext) {
-                        logger.info("Ошибка пачки книг");
-                    }
-                })
+                .listener(getChunkListener("книг"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
+    }
+
+    public ChunkListener getChunkListener(String objectName) {
+        return new ChunkListener() {
+            public void afterChunk(@NonNull ChunkContext chunkContext) {
+                var stepExecution = chunkContext.getStepContext().getStepExecution();
+                logger.info("Конец пачки " + objectName + "." +
+                        " Read count: " + stepExecution.getReadCount() + "" +
+                        " write count: " + stepExecution.getWriteCount());
+            }
+
+            public void afterChunkError(@NonNull ChunkContext chunkContext) {
+                logger.info("Ошибка пачки " + objectName);
+            }
+        };
     }
 
     @Bean

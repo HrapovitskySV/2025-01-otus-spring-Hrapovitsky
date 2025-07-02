@@ -6,12 +6,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Column;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.FetchType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 @Data
@@ -24,13 +20,7 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Стратегия генерации идентификаторов
     private long id;
 
-    /*
-    @ManyToOne(targetEntity = Book.class, fetch = FetchType.LAZY)
-    @EqualsAndHashCode.Exclude
-    @JoinColumn(name = "book_id")
-    private Book book;
 
-     */
     @Column(name = "book_id")
     private long bookId;
 

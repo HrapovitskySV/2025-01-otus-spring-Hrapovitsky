@@ -13,6 +13,7 @@ import ru.otus.hw.modelsMongo.GenreMongo;
 import ru.otus.hw.services.CountMapper;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
@@ -20,17 +21,15 @@ import static java.util.stream.Collectors.toList;
 
 public class BookItemProcessor implements ItemProcessor<BookMongo, Book> {
 
-    private static final Logger log = LoggerFactory.getLogger(BookItemProcessor.class);
-
     private int lastId;
 
-    private final HashMap<String, Integer> mapIdBook;
+    private final Map<String, Integer> mapIdBook;
 
-    private final HashMap<String, Integer> mapIdAuthor;
+    private final Map<String, Integer> mapIdAuthor;
 
-    private final HashMap<String, Integer> mapIdGenre;
+    private final Map<String, Integer> mapIdGenre;
 
-    public BookItemProcessor(JdbcTemplate jdbcTemplate, HashMap<String, Integer> mapIdAuthor, HashMap<String, Integer> mapIdGenre, HashMap<String, Integer> mapIdBook) {
+    public BookItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapIdAuthor, Map<String, Integer> mapIdGenre, Map<String, Integer> mapIdBook) {
         this.mapIdAuthor = mapIdAuthor;
         this.mapIdGenre = mapIdGenre;
         this.mapIdBook = mapIdBook;
@@ -50,7 +49,7 @@ public class BookItemProcessor implements ItemProcessor<BookMongo, Book> {
         return new Book(lastId,bookMongo.getTitle(), author, genres);
     }
 
-    public Integer getMapId(HashMap<String, Integer> mapId, String mongoId) {
+    public Integer getMapId(Map<String, Integer> mapId, String mongoId) {
         var id = mapId.get(mongoId);
         if ( isNull(id) ){
             throw new EntityNotFoundException("Not found SQL id for MongoID "+mongoId);

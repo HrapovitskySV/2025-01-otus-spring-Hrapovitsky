@@ -9,15 +9,16 @@ import ru.otus.hw.modelsMongo.GenreMongo;
 import ru.otus.hw.services.CountMapper;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class GerneItemProcessor implements ItemProcessor<GenreMongo, Genre> {
 
     private static final Logger log = LoggerFactory.getLogger(GerneItemProcessor.class);
 
     private int lastId;
-    private final HashMap<String, Integer> mapId;
+    private final Map<String, Integer> mapId;
 
-    public GerneItemProcessor(JdbcTemplate jdbcTemplate, HashMap<String, Integer> mapId) {
+    public GerneItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapId) {
         this.mapId = mapId;
 
         jdbcTemplate
