@@ -79,7 +79,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!--
+
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo</artifactId>
@@ -91,8 +91,6 @@
             <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
             <version>4.9.3</version>
         </dependency>
-        -->
-
 
         <dependency>
             <groupId>com.github.cloudyrock.mongock</groupId>
@@ -106,14 +104,14 @@
             </exclusions>
         </dependency>
 
-        <!--
+
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
+            <!--<version>${guava.version}</version>-->
             <version>33.3.1-jre</version>
         </dependency>
-        -->
+
 
         <dependency>
             <groupId>com.github.cloudyrock.mongock</groupId>

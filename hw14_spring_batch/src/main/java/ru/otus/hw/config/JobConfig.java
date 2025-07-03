@@ -62,7 +62,7 @@ import java.util.Map;
 public class JobConfig {
     public static final String IMPORT_BOOK_JOB_NAME = "importBookJob";
 
-    private static final int CHUNK_SIZE = 20;
+    private static final int CHUNK_SIZE = 50;
 
     private final Logger logger = LoggerFactory.getLogger("Batch");
 

@@ -35,27 +35,27 @@ spring:
     hibernate:
       ddl-auto: none
 
-    show-sql: true
+    #show-sql: true
 
   data:
     mongodb:
-      authentication-database: admin
-      username: root
-      password: example
+      #authentication-database: admin
+      #username: root
+      #password: example
       database: batch_db
-      port: 27017
+      #port: 27017
       host: localhost
-      #port: 0
+      port: 0
   batch:
     job:
       enabled: false
 
 
-#de:
-#  flapdoodle:
-#    mongodb:
-#      embedded:
-#        version: 4.0.2
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
 
 mongock:
   #runner-type: "ApplicationRunner" # default
