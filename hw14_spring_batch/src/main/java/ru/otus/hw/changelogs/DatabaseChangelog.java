@@ -35,10 +35,9 @@ public class DatabaseChangelog {
                            AuthorMongoRepository authorRepository,
                            GenreMongoRepository genreRepository) {
 
-        int i;
         int batch = 10;
 
-        for (i = 1; i <= batch; i++) {
+        for (int i = 1; i <= batch; i++) {
             authorRepository.save(new AuthorMongo(Integer.toString(i), String.format("Автор %d",i)));
             genreRepository.save(new GenreMongo(Integer.toString(i), String.format("Жанр %d",i)));
         }
@@ -53,7 +52,6 @@ public class DatabaseChangelog {
         BookMongo book;
 
         int batch10 = 10 * batch;
-        int i;
         int j;
 
         String idComment;
@@ -61,10 +59,11 @@ public class DatabaseChangelog {
         int randNum;
         int randNum2;
 
-        for (i = 1; i <= batch10; i++) {
+        for (int i = 1; i <= batch10; i++) {
             randNum = rand.nextInt(1,batch);
             randNum2 = rand.nextInt(1,batch);
             book = createBook(i, randNum, randNum2);
+            book = bookRepository.save(book);
 
             for (j = 1; j < Math.round(i / 3); j++) {
                 idComment = String.format("%d_%d",i,j);
@@ -83,6 +82,7 @@ public class DatabaseChangelog {
 
         var book = new BookMongo(Integer.toString(key), String.format("Книга %d", key), null, genres);
         book.setAuthor(new AuthorMongo(Integer.toString(randNum), String.format("Автор %d",randNum)));
+
 
         return book;
     }

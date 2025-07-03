@@ -70,8 +70,6 @@ public class JobConfig {
     @PersistenceContext
     private final EntityManager em;
 
-    private final EntityManager entityManager;
-
     private final JdbcTemplate jdbcTemplate;
 
     private final DataSource dataSource;
@@ -202,7 +200,7 @@ public class JobConfig {
     public MongoPagingItemReader<CommentMongo> readerComment() {
         return new MongoPagingItemReaderBuilder<CommentMongo>()
                 .name("commentItemReader")
-                .collection("comments")
+                //.collection("comments")
                 .pageSize(CHUNK_SIZE)
                 .template(mongoTemplate)
                 .jsonQuery("{}")

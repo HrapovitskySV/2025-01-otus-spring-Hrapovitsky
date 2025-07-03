@@ -45,6 +45,7 @@ spring:
       database: batch_db
       port: 27017
       host: localhost
+      #port: 0
   batch:
     job:
       enabled: false

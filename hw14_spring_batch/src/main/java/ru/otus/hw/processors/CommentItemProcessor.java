@@ -36,7 +36,7 @@ public class CommentItemProcessor implements ItemProcessor<CommentMongo, Comment
     public Integer getMapId(Map<String, Integer> mapId, String mongoId) {
         var id = mapId.get(mongoId);
         if (isNull(id)) {
-            throw new EntityNotFoundException("Not found SQL id book for MongoID " + mongoId);
+            throw new EntityNotFoundException("Not found SQL id comment for MongoID " + mongoId);
         }
         return id;
     }
