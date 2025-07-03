@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface BookMongoRepository extends MongoRepository<BookMongo, String> {
+public interface BookMongoRepository extends MongoRepository<BookMongo, String>, BookMongoRepositoryCustom {
 
     @Nonnull
     Optional<BookMongo> findById(@Nonnull String id);
