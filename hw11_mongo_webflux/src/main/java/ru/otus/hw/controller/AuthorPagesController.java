@@ -14,8 +14,6 @@ import ru.otus.hw.repositories.AuthorRepository;
 @RequiredArgsConstructor
 public class AuthorPagesController {
 
-    private final AuthorService authorService;
-
     private final AuthorRepository authorRepository;
 
     @GetMapping("/authors/")
