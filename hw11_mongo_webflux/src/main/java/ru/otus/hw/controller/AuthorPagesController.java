@@ -9,7 +9,6 @@ import org.springframework.web.reactive.result.view.Rendering;
 import reactor.core.publisher.Mono;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.repositories.AuthorRepository;
-import ru.otus.hw.services.AuthorService;
 
 @Controller
 @RequiredArgsConstructor

@@ -1,15 +1,16 @@
 package ru.otus.hw.repositories;
 
 import org.springframework.stereotype.Repository;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface BookRepositoryCustom {
 
-    void updateBookAuthors(String authorId, String authorFullName);
+    Mono<Boolean> updateBookAuthors(String authorId, String authorFullName);
 
-    void deleteBookAuthors(String authorId);
+    Mono<Boolean> deleteBookAuthors(String authorId);
 
-    void updateBookGenre(String genreId, String genreName);
+    Mono<Boolean> updateBookGenre(String genreId, String genreName);
 
-    void deleteBookGenre(String genreId);
+    Mono<Boolean> deleteBookGenre(String genreId);
 }
