@@ -76,7 +76,8 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional()
-    public Book update(long id, String title, long authorId, Set<Long> genresIds) {
+    @PreAuthorize("canUpdate(#id, Book.class)")
+    public Book update(@Param("id")long id, String title, long authorId, Set<Long> genresIds) {
         return save(id, title, authorId, genresIds);
     }
 
@@ -90,9 +91,9 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional()
-    public void deleteById(long id) {
-        var book = new Book(id,null,null,null);
-        bookService.delete(book);
+    @PreAuthorize("hasPermission(#id, Book.class, 'DELETE')")
+    public void deleteById(@Param("id")long id) {
+        bookRepository.deleteById(id);
     }
 
 
@@ -123,10 +124,6 @@ public class BookServiceImpl implements BookService {
         }
 
         var book = new Book(id, title, author, genres);
-        if (id == 0) {
-            return bookService.create(book);
-        } else {
-            return bookService.save(book);
-        }
+        return save(book);
     }
 }

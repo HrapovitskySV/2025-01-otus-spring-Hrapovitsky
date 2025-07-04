@@ -10,6 +10,6 @@ public interface AclMethodSecurityExpressionOperations extends MethodSecurityExp
 
     boolean canRead(Object targetId, Class<?> targetClass);
 
-    boolean canUpdate(Object targetId, Class<?> targetClass, boolean isNew);
+    boolean canUpdate(Object targetId, Class<?> targetClass);
 
 }

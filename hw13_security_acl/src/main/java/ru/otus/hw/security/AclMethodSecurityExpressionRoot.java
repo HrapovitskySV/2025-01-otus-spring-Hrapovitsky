@@ -68,7 +68,7 @@ public class AclMethodSecurityExpressionRoot extends SecurityExpressionRoot
     }
 
     @Override
-    public boolean canUpdate(Object targetId, Class<?> targetClass, boolean isNew) {
+    public boolean canUpdate(Object targetId, Class<?> targetClass) {
         return isGranted(targetId, targetClass, write);
     }
 
