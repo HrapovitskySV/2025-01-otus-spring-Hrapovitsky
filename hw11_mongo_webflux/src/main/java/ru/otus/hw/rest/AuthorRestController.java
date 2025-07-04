@@ -18,6 +18,8 @@ import ru.otus.hw.models.Author;
 import ru.otus.hw.repositories.AuthorRepository;
 import ru.otus.hw.repositories.BookRepository;
 
+import java.util.Objects;
+
 @RestController
 @RequiredArgsConstructor
 public class AuthorRestController {
@@ -49,7 +51,7 @@ public class AuthorRestController {
     @PostMapping("/api/authors")
     @Transactional
     public Mono<ResponseEntity<Author>> insertAuthor(@RequestBody Author author) {
-        if (author.getId()=="") {
+        if (Objects.equals(author.getId(), "")) {
             author.setId(null);// с фронта приходит пустая строка, и прям так и записывается, а это не правильно
         }
         return save(author)
