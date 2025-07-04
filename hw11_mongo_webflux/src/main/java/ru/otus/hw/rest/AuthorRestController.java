@@ -49,6 +49,9 @@ public class AuthorRestController {
     @PostMapping("/api/authors")
     @Transactional
     public Mono<ResponseEntity<Author>> insertAuthor(@RequestBody Author author) {
+        if (author.getId()=="") {
+            author.setId(null);// с фронта приходит пустая строка, и прям так и записывается, а это не правильно
+        }
         return save(author)
                 .map(savedAuthor -> new ResponseEntity<Author>(savedAuthor, HttpStatusCode.valueOf(201)))
                 .defaultIfEmpty(ResponseEntity.notFound().build());
