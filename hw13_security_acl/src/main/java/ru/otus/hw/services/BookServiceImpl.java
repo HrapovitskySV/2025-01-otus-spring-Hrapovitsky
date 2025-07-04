@@ -105,8 +105,6 @@ public class BookServiceImpl implements BookService {
 
 
     @Override
-    //@PreAuthorize("hasPermission(#book, 'CREATE')") // не понимаю как даются права на создание нового объекта,
-    // наверное эо право только для отнятия, такая возможность тоже есть
     public Book create(@Param("book")Book book) {
         return bookRepository.save(book);
     }
