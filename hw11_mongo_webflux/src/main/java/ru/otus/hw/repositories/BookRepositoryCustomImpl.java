@@ -1,5 +1,6 @@
 package ru.otus.hw.repositories;
 
+import com.mongodb.client.result.UpdateResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -14,34 +15,30 @@ public class BookRepositoryCustomImpl implements BookRepositoryCustom {
     private final ReactiveMongoTemplate mongoTemplate;
 
     @Override
-    public Mono<Boolean> updateBookAuthors(String authorId, String authorFullName) {
+    public Mono<UpdateResult> updateBookAuthors(String authorId, String authorFullName) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
         Update update = new Update().set("author.full_Name", authorFullName);
-        var wr = mongoTemplate.updateMulti(query,update, Book.class).subscribe();
-        return Mono.just(true);
+        return mongoTemplate.updateMulti(query,update, Book.class);
     }
 
     @Override
-    public Mono<Boolean> deleteBookAuthors(String authorId) {
+    public Mono<UpdateResult> deleteBookAuthors(String authorId) {
         Query query = new Query(Criteria.where("author._id").is(authorId));
         Update update = new Update().set("author", null);
-        var wr = mongoTemplate.updateMulti(query,update,Book.class).subscribe();
-        return Mono.just(true);
+        return mongoTemplate.updateMulti(query,update,Book.class);
     }
 
     @Override
-    public Mono<Boolean> updateBookGenre(String genreId, String genreName) {
+    public Mono<UpdateResult> updateBookGenre(String genreId, String genreName) {
         Query query = new Query(Criteria.where("genres._id").is(genreId));
         Update update = new Update().set("genres.$.name", genreName);
-        var wr = mongoTemplate.updateMulti(query,update, Book.class).subscribe();
-        return Mono.just(true);
+        return mongoTemplate.updateMulti(query,update, Book.class);
     }
 
     @Override
-    public Mono<Boolean> deleteBookGenre(String genreId) {
+    public Mono<UpdateResult> deleteBookGenre(String genreId) {
         Query query = new Query(Criteria.where("genres._id").is(genreId));
         Update update = new Update().pull("genres", new Query(Criteria.where("._id").is(genreId)));
-        var wr = mongoTemplate.updateMulti(query,update,Book.class).subscribe();
-        return Mono.just(true);
+        return mongoTemplate.updateMulti(query,update,Book.class);
     }
 }
