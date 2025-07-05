@@ -68,7 +68,7 @@ mongock:
       journal: false
     read-concern: local
 server:
-  port: 8082
+  port: 8080
 
 logging:
   level:

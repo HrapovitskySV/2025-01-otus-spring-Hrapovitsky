@@ -30,7 +30,7 @@ public class CommentItemProcessor implements ItemProcessor<CommentMongo, Comment
 
     public Comment process(final CommentMongo commentMongo) {
         lastId++;
-        return new Comment(lastId,getMapId(mapIdBook,commentMongo.getBook().getId()), commentMongo.getComment());
+        return new Comment(0,getMapId(mapIdBook,commentMongo.getBook().getId()), commentMongo.getComment());
     }
 
     public Integer getMapId(Map<String, Integer> mapId, String mongoId) {

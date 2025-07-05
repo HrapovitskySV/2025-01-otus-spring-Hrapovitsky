@@ -5,21 +5,19 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobExecution;
-import org.springframework.batch.core.JobExecutionListener;
-import org.springframework.batch.core.Step;
-import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.*;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.support.SimpleFlow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
+import org.springframework.batch.core.listener.CompositeItemWriteListener;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
+import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.MongoPagingItemReader;
 import org.springframework.batch.item.data.builder.MongoPagingItemReaderBuilder;
@@ -50,9 +48,11 @@ import ru.otus.hw.processors.GerneItemProcessor;
 import ru.otus.hw.services.CleanUpService;
 import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.modelsMongo.AuthorMongo;
+import ru.otus.hw.services.MapObjectService;
 
 import javax.sql.DataSource;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -76,7 +76,11 @@ public class JobConfig {
 
     private final MongoTemplate mongoTemplate;
 
+    private final MapObjectService mapObjectService;
+
     private final Map<String, Integer> mapIdAuthor = new HashMap<String, Integer>();
+
+    private final Map<String, Author> mapAuthors = new HashMap<String, Author>();
 
     private final Map<String, Integer> mapIdGenre = new HashMap<String, Integer>();
 
@@ -112,7 +116,8 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<AuthorMongo, Author> processorAuthor() {
-        return new AuthorItemProcessor(jdbcTemplate, mapIdAuthor);
+        //return new AuthorItemProcessor(jdbcTemplate, mapIdAuthor, mapAuthors);
+        return new AuthorItemProcessor(mapObjectService);
     }
 
 
@@ -130,8 +135,8 @@ public class JobConfig {
     @Bean
     public JdbcBatchItemWriter<Author> batchWriterAuthor() {
         return new JdbcBatchItemWriterBuilder<Author>()
-                .sql("INSERT INTO authors (id, full_Name) VALUES (:id, :fullName)")
-                //.sql("INSERT INTO authors (full_Name) VALUES (:fullName)")
+                //.sql("INSERT INTO authors (id, full_Name) VALUES (:id, :fullName)")
+                .sql("INSERT INTO authors (full_Name) VALUES (:fullName)")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();
@@ -139,13 +144,23 @@ public class JobConfig {
 
     @Bean
     public Step transformAuthorsStep(MongoPagingItemReader<AuthorMongo> reader,
-                                     JdbcBatchItemWriter<Author> writer,
+                                     JpaItemWriter<Author> writer,
                                      ItemProcessor<AuthorMongo, Author> itemProcessor) {
         return new StepBuilder("transformAuthorsStep", jobRepository)
                 .<AuthorMongo, Author>chunk(CHUNK_SIZE, platformTransactionManager)
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
+                .listener(new ItemWriteListener<Author>() {
+                    public void afterWrite(Chunk items) {
+                        mapObjectService.convertMapAutorToMapIdAutor();
+                        logger.info("Конец записи");
+                    }
+
+                    public void onWriteError(@NonNull Exception e, @NonNull List<Author> list) {
+                        logger.info("Ошибка записи");
+                    }
+                })
                 .listener(getChunkListener("авторов"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
@@ -168,7 +183,8 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<GenreMongo, Genre> processorGenre() {
-        return new GerneItemProcessor(jdbcTemplate, mapIdGenre);
+        //return new GerneItemProcessor(jdbcTemplate, mapIdGenre);
+        return new GerneItemProcessor(mapObjectService);
     }
 
     @StepScope
@@ -190,6 +206,15 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
+                .listener(new ItemWriteListener<Genre>() {
+                    public void afterWrite(Chunk items) {
+                        mapObjectService.convertMapGenreToMapIdGenre();
+                    }
+
+                    public void onWriteError(@NonNull Exception e, @NonNull List<Genre> list) {
+                        logger.info("Ошибка записи");
+                    }
+                })
                 .listener(getChunkListener("жанров"))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
@@ -258,7 +283,8 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<BookMongo, Book> processorBook() {
-        return new BookItemProcessor(jdbcTemplate, mapIdAuthor, mapIdGenre, mapIdBook);
+        //return new BookItemProcessor(jdbcTemplate, mapIdAuthor, mapIdGenre, mapIdBook);
+        return new BookItemProcessor(mapObjectService);
     }
 
 
@@ -267,20 +293,28 @@ public class JobConfig {
     public JpaItemWriter<Book> itemWriterBook() {
         return new JpaItemWriterBuilder<Book>()
                 .entityManagerFactory(em.getEntityManagerFactory())
-                .usePersist(false)
+                .usePersist(true)
                 .build();
     }
 
     @Bean
     public Step transformBookStep(MongoPagingItemReader<BookMongo> reader, JpaItemWriter<Book> writer,
                                     ItemProcessor<BookMongo, Book> itemProcessor) {
-        return new StepBuilder("transformGenresStep", jobRepository)
+        return new StepBuilder("transformBookStep", jobRepository)
                 .<BookMongo, Book>chunk(CHUNK_SIZE, platformTransactionManager)
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
+                .listener(new ItemWriteListener<Book>() {
+                    public void afterWrite(Chunk items) {
+                        mapObjectService.convertMapBookToMapIdBook();
+                    }
+
+                    public void onWriteError(@NonNull Exception e, @NonNull List<Book> list) {
+                        logger.info("Ошибка записи");
+                    }
+                })
                 .listener(getChunkListener("книг"))
-//                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
 

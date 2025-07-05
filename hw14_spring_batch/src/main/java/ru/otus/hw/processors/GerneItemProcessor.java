@@ -1,31 +1,25 @@
 package ru.otus.hw.processors;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.jdbc.core.JdbcTemplate;
+import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.modelsJpa.Genre;
 import ru.otus.hw.modelsMongo.GenreMongo;
 import ru.otus.hw.services.CountMapper;
+import ru.otus.hw.services.MapObjectService;
 
 import java.util.Map;
 
+@RequiredArgsConstructor
 public class GerneItemProcessor implements ItemProcessor<GenreMongo, Genre> {
 
-    private int lastId;
-
-    private final Map<String, Integer> mapId;
-
-    public GerneItemProcessor(JdbcTemplate jdbcTemplate, Map<String, Integer> mapId) {
-        this.mapId = mapId;
-
-        jdbcTemplate
-                .query("SELECT max(id) as c FROM genres", new CountMapper())
-                .forEach(count -> this.lastId = count);
-    }
+    private final MapObjectService mapObjectService;
 
     @Override
     public Genre process(final GenreMongo genreMongo) {
-        lastId++;
-        mapId.put(genreMongo.getId(), lastId);
-        return new Genre(lastId,genreMongo.getName());
+        var genre = new Genre(0,genreMongo.getName());
+        mapObjectService.putGenre(genreMongo.getId(), genre);
+        return genre;
     }
 }
