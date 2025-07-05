@@ -7,11 +7,9 @@ import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.modelsJpa.Book;
 import ru.otus.hw.modelsJpa.Genre;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import static java.util.Objects.isNull;
 
@@ -35,7 +33,7 @@ public class MapObjectServiceImpl implements MapObjectService {
         mapAuthors.put(key, author);
     }
 
-    public Boolean convertMapAutorToMapIdAutor(){
+    public Boolean convertMapAutorToMapIdAutor() {
         mapAuthors.forEach((key, author) -> mapIdAuthor.put(key, author.getId()));
         mapAuthors.clear();
         return true;

@@ -1,11 +1,8 @@
 package ru.otus.hw.services;
 
-import ru.otus.hw.exceptions.EntityNotFoundException;
 import ru.otus.hw.modelsJpa.Author;
-import ru.otus.hw.modelsJpa.Genre;
 import ru.otus.hw.modelsJpa.Book;
-
-import static java.util.Objects.isNull;
+import ru.otus.hw.modelsJpa.Genre;
 
 public interface MapObjectService {
 

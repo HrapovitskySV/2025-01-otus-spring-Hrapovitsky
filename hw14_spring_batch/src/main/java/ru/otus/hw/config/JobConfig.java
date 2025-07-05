@@ -5,19 +5,21 @@ import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.batch.core.*;
+import org.springframework.batch.core.ChunkListener;
+import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.batch.core.JobExecution;
+import org.springframework.batch.core.Step;
+import org.springframework.batch.core.Job;
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.job.builder.FlowBuilder;
 import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.job.flow.Flow;
 import org.springframework.batch.core.job.flow.support.SimpleFlow;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.core.listener.CompositeItemWriteListener;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.builder.StepBuilder;
 import org.springframework.batch.core.step.tasklet.MethodInvokingTaskletAdapter;
-import org.springframework.batch.item.Chunk;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.data.MongoPagingItemReader;
 import org.springframework.batch.item.data.builder.MongoPagingItemReaderBuilder;
@@ -32,7 +34,6 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.expression.Operation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -46,19 +47,14 @@ import ru.otus.hw.processors.AuthorItemProcessor;
 import ru.otus.hw.processors.BookItemProcessor;
 import ru.otus.hw.processors.CommentItemProcessor;
 import ru.otus.hw.processors.GerneItemProcessor;
-import ru.otus.hw.services.CleanUpService;
+import ru.otus.hw.services.CheckUpService;
 import ru.otus.hw.modelsJpa.Author;
 import ru.otus.hw.modelsMongo.AuthorMongo;
 import ru.otus.hw.services.MapObjectService;
 
 import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
-import java.util.function.UnaryOperator;
-
-import static org.reflections.util.ConfigurationBuilder.build;
 
 
 @SuppressWarnings("unused")
@@ -83,15 +79,6 @@ public class JobConfig {
 
     private final MapObjectService mapObjectService;
 
-    private final Map<String, Integer> mapIdAuthor = new HashMap<String, Integer>();
-
-    private final Map<String, Author> mapAuthors = new HashMap<String, Author>();
-
-    private final Map<String, Integer> mapIdGenre = new HashMap<String, Integer>();
-
-    private final Map<String, Integer> mapIdBook = new HashMap<String, Integer>();
-
-
     @Autowired
     private JobRepository jobRepository;
 
@@ -100,7 +87,7 @@ public class JobConfig {
 
 
     @Autowired
-    private CleanUpService cleanUpService;
+    private CheckUpService checkUpService;
 
     @StepScope
     @Bean
@@ -121,7 +108,6 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<AuthorMongo, Author> processorAuthor() {
-        //return new AuthorItemProcessor(jdbcTemplate, mapIdAuthor, mapAuthors);
         return new AuthorItemProcessor(mapObjectService);
     }
 
@@ -178,7 +164,6 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<GenreMongo, Genre> processorGenre() {
-        //return new GerneItemProcessor(jdbcTemplate, mapIdGenre);
         return new GerneItemProcessor(mapObjectService);
     }
 
@@ -232,7 +217,6 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<CommentMongo, Comment> processorComment() {
-        //return new CommentItemProcessor(jdbcTemplate, mapIdBook);
         return new CommentItemProcessor(mapObjectService);
     }
 
@@ -283,7 +267,6 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<BookMongo, Book> processorBook() {
-        //return new BookItemProcessor(jdbcTemplate, mapIdAuthor, mapIdGenre, mapIdBook);
         return new BookItemProcessor(mapObjectService);
     }
 
@@ -326,11 +309,11 @@ public class JobConfig {
     }
 
     @Bean
-    public MethodInvokingTaskletAdapter cleanUpTasklet() {
+    public MethodInvokingTaskletAdapter checkUpTasklet() {
         MethodInvokingTaskletAdapter adapter = new MethodInvokingTaskletAdapter();
 
-        adapter.setTargetObject(cleanUpService);
-        adapter.setTargetMethod("cleanUp");
+        adapter.setTargetObject(checkUpService);
+        adapter.setTargetMethod("checkUp");
 
         return adapter;
     }
@@ -361,7 +344,6 @@ public class JobConfig {
     public Job importBookJob(Flow splitFlow, Step transformBookStep, Step transformCommentsStep, Step cleanUpStep) {
         return new JobBuilder(IMPORT_BOOK_JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
-                //.flow(transformAuthorsStep)
                 .start(splitFlow)
                 .next(transformBookStep)
                 .next(transformCommentsStep)
@@ -384,9 +366,9 @@ public class JobConfig {
 
 
     @Bean
-    public Step cleanUpStep() {
-        return new StepBuilder("cleanUpStep", jobRepository)
-                .tasklet(cleanUpTasklet(), platformTransactionManager)
+    public Step checkUpStep() {
+        return new StepBuilder("checkUpStep", jobRepository)
+                .tasklet(checkUpTasklet(), platformTransactionManager)
                 .build();
     }
 

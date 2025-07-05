@@ -8,12 +8,12 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class CleanUpService {
+public class CheckUpService {
 
     private final JdbcTemplate jdbcTemplate;
 
     @SuppressWarnings("unused")
-    public void cleanUp() throws Exception {
+    public void checkUp() throws Exception {
         log.info("Выполняю завершающие мероприятия...");
         jdbcTemplate
                 .query("SELECT count(*) as c FROM authors", new CountMapper())
