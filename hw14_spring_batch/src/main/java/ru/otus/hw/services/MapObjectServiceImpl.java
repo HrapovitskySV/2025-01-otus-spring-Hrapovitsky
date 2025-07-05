@@ -8,6 +8,7 @@ import ru.otus.hw.modelsJpa.Book;
 import ru.otus.hw.modelsJpa.Genre;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -34,9 +35,10 @@ public class MapObjectServiceImpl implements MapObjectService {
         mapAuthors.put(key, author);
     }
 
-    public void convertMapAutorToMapIdAutor(){
+    public Boolean convertMapAutorToMapIdAutor(){
         mapAuthors.forEach((key, author) -> mapIdAuthor.put(key, author.getId()));
         mapAuthors.clear();
+        return true;
     }
 
     @Override
@@ -45,10 +47,10 @@ public class MapObjectServiceImpl implements MapObjectService {
     }
 
     @Override
-    public void convertMapGenreToMapIdGenre() {
+    public Boolean convertMapGenreToMapIdGenre() {
         mapGenres.forEach((key, genre) -> mapIdGenre.put(key, genre.getId()));
         mapGenres.clear();
-
+        return true;
     }
 
     @Override
@@ -57,10 +59,10 @@ public class MapObjectServiceImpl implements MapObjectService {
     }
 
     @Override
-    public void convertMapBookToMapIdBook() {
+    public Boolean convertMapBookToMapIdBook() {
         mapBooks.forEach((key, book) -> mapIdBook.put(key, book.getId()));
         mapBooks.clear();
-
+        return true;
     }
 
     public Long getIdAuthorFromKey(String key) {
@@ -95,6 +97,11 @@ public class MapObjectServiceImpl implements MapObjectService {
             throw new EntityNotFoundException("Not found SQL id book for MongoID " + key);
         }
         return id;
+    }
+
+    @Override
+    public Book getTemplateBookFromKey(String key) {
+        return new Book(getIdBookFromKey(key), null, null, List.of());
     }
 
 }

@@ -11,15 +11,15 @@ public interface MapObjectService {
 
    void putAuthor(String key, Author author);
 
-   void convertMapAutorToMapIdAutor();
+    Boolean convertMapAutorToMapIdAutor();
 
     void putGenre(String key, Genre genre);
 
-    void convertMapGenreToMapIdGenre();
+    Boolean convertMapGenreToMapIdGenre();
 
     void putBook(String key, Book book);
 
-    void convertMapBookToMapIdBook();
+    Boolean convertMapBookToMapIdBook();
 
     Long getIdAuthorFromKey(String key);
 
@@ -32,4 +32,5 @@ public interface MapObjectService {
 
     Long getIdBookFromKey(String key);
 
+    Book getTemplateBookFromKey(String key);
 }

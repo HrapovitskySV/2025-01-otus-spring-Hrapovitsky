@@ -32,6 +32,7 @@ import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.expression.Operation;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.lang.NonNull;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -54,6 +55,10 @@ import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiFunction;
+import java.util.function.UnaryOperator;
+
+import static org.reflections.util.ConfigurationBuilder.build;
 
 
 @SuppressWarnings("unused")
@@ -151,17 +156,7 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(new ItemWriteListener<Author>() {
-                    public void afterWrite(Chunk items) {
-                        mapObjectService.convertMapAutorToMapIdAutor();
-                        logger.info("Конец записи");
-                    }
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List<Author> list) {
-                        logger.info("Ошибка записи");
-                    }
-                })
-                .listener(getChunkListener("авторов"))
+                .listener(getChunkListener("авторов", (t,u) -> mapObjectService.convertMapAutorToMapIdAutor()))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
@@ -189,33 +184,33 @@ public class JobConfig {
 
     @StepScope
     @Bean
+    public JpaItemWriter<Genre> itemWriterGenre() {
+        return new JpaItemWriterBuilder<Genre>()
+                .entityManagerFactory(em.getEntityManagerFactory())
+                .usePersist(true)
+                .build();
+    }
+
+    @StepScope
+    @Bean
     public JdbcBatchItemWriter<Genre> batchWriterGenre() {
         return new JdbcBatchItemWriterBuilder<Genre>()
-                .sql("INSERT INTO genres (id, name) VALUES (:id, :name)")
-                //.sql("INSERT INTO genres (name) VALUES (:name)")
+                //.sql("INSERT INTO genres (id, name) VALUES (:id, :name)")
+                .sql("INSERT INTO genres (name) VALUES (:name)")
                 .dataSource(dataSource)
                 .beanMapped()
                 .build();
     }
 
     @Bean
-    public Step transformGenresStep(MongoPagingItemReader<GenreMongo> reader, JdbcBatchItemWriter<Genre> writer,
+    public Step transformGenresStep(MongoPagingItemReader<GenreMongo> reader, JpaItemWriter<Genre> writer,
                                      ItemProcessor<GenreMongo, Genre> itemProcessor) {
         return new StepBuilder("transformGenresStep", jobRepository)
                 .<GenreMongo, Genre>chunk(CHUNK_SIZE, platformTransactionManager)
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(new ItemWriteListener<Genre>() {
-                    public void afterWrite(Chunk items) {
-                        mapObjectService.convertMapGenreToMapIdGenre();
-                    }
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List<Genre> list) {
-                        logger.info("Ошибка записи");
-                    }
-                })
-                .listener(getChunkListener("жанров"))
+                .listener(getChunkListener("жанров",(t,u) -> mapObjectService.convertMapGenreToMapIdGenre()))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
@@ -237,7 +232,8 @@ public class JobConfig {
     @StepScope
     @Bean
     public ItemProcessor<CommentMongo, Comment> processorComment() {
-        return new CommentItemProcessor(jdbcTemplate, mapIdBook);
+        //return new CommentItemProcessor(jdbcTemplate, mapIdBook);
+        return new CommentItemProcessor(mapObjectService);
     }
 
     @StepScope
@@ -259,10 +255,14 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(getChunkListener("комментариев"))
+                .listener(getChunkListener("комментариев", (t,u) -> {
+                    return true;
+                }))
 //                .taskExecutor(new SimpleAsyncTaskExecutor())
                 .build();
     }
+
+
 
     @StepScope
     @Bean
@@ -305,26 +305,18 @@ public class JobConfig {
                 .reader(reader)
                 .processor(itemProcessor)
                 .writer(writer)
-                .listener(new ItemWriteListener<Book>() {
-                    public void afterWrite(Chunk items) {
-                        mapObjectService.convertMapBookToMapIdBook();
-                    }
-
-                    public void onWriteError(@NonNull Exception e, @NonNull List<Book> list) {
-                        logger.info("Ошибка записи");
-                    }
-                })
-                .listener(getChunkListener("книг"))
+                .listener(getChunkListener("книг",(t,u) -> mapObjectService.convertMapBookToMapIdBook()))
                 .build();
     }
 
-    public ChunkListener getChunkListener(String objectName) {
+    public ChunkListener getChunkListener(String objectName, BiFunction function) {
         return new ChunkListener() {
             public void afterChunk(@NonNull ChunkContext chunkContext) {
                 var stepExecution = chunkContext.getStepContext().getStepExecution();
                 logger.info("Конец пачки " + objectName + "." +
                         " Read count: " + stepExecution.getReadCount() + "" +
                         " write count: " + stepExecution.getWriteCount());
+                function.apply(1,1);
             }
 
             public void afterChunkError(@NonNull ChunkContext chunkContext) {
