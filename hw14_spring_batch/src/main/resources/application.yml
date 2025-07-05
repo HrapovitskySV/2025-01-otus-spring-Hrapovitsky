@@ -1,0 +1,78 @@
+spring:
+  shell:
+    interactive:
+      enabled: true
+    noninteractive:
+      enabled: false
+
+    command:
+      version:
+        enabled: false
+  #main:
+  #  allow-bean-definition-overriding: true
+  datasource:
+    #url: jdbc:postgresql://localhost:5432/stage
+    #username: postgres
+    #password: secret
+    url: jdbc:h2:mem:maindb
+    driverClassName: org.h2.Driver
+    username: sa
+    password:
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        web-allow-others: true
+  sql:
+    init:
+      mode: always
+      #data-locations: data.sql
+      schema-locations: schema.sql
+
+  jpa:
+    generate-ddl: false
+    hibernate:
+      ddl-auto: none
+
+    #show-sql: true
+
+  data:
+    mongodb:
+      #authentication-database: admin
+      #username: root
+      #password: example
+      database: batch_db
+      #port: 27017
+      host: localhost
+      port: 0
+  batch:
+    job:
+      enabled: false
+
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
+
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.changelogs
+  #  - com.github.cloudyrock.mongock.integrationtests.spring5.springdata3.changelogs.client.initializer    -
+  mongo-db:
+    write-concern:
+      journal: false
+    read-concern: local
+server:
+  port: 8080
+
+logging:
+  level:
+    root: ERROR
+    #root: INFO
+    Batch: INFO
+    ru.otus.example.springbatch: INFO
