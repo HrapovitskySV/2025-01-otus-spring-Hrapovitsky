@@ -341,13 +341,13 @@ public class JobConfig {
     }
 
     @Bean
-    public Job importBookJob(Flow splitFlow, Step transformBookStep, Step transformCommentsStep, Step cleanUpStep) {
+    public Job importBookJob(Flow splitFlow, Step transformBookStep, Step transformCommentsStep, Step checkUpStep) {
         return new JobBuilder(IMPORT_BOOK_JOB_NAME, jobRepository)
                 .incrementer(new RunIdIncrementer())
                 .start(splitFlow)
                 .next(transformBookStep)
                 .next(transformCommentsStep)
-                .next(cleanUpStep)
+                .next(checkUpStep)
                 .end()
                 .listener(new JobExecutionListener() {
                     @Override
