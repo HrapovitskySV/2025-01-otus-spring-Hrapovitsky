@@ -7,11 +7,7 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface BookRepositoryCustom {
 
-    Mono<UpdateResult> updateBookAuthors(String authorId, String authorFullName);
+    Mono<Boolean> updateBookAuthors(String authorId, String authorFullName);
 
-    Mono<UpdateResult> deleteBookAuthors(String authorId);
-
-    Mono<UpdateResult> updateBookGenre(String genreId, String genreName);
-
-    Mono<UpdateResult> deleteBookGenre(String genreId);
+    Mono<Boolean> deleteBookAuthors(String authorId);
 }

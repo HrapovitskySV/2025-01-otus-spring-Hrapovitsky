@@ -19,7 +19,7 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class InitDatabase implements ApplicationRunner {
+public class InitializationDatabase implements ApplicationRunner {
 
     private final BookRepository bookRepository;
 
