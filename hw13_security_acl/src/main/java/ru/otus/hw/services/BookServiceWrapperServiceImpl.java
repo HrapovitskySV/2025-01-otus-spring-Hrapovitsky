@@ -10,7 +10,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class BookServiceWrapperServiceImpl implements  BookServiceWrapperService{
+public class BookServiceWrapperServiceImpl implements  BookServiceWrapperService {
 
     private final BookService bookService;
 

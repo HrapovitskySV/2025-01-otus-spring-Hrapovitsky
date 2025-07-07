@@ -11,7 +11,6 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.BookServiceWrapperService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.ArrayList;
