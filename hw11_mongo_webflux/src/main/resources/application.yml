@@ -1,0 +1,39 @@
+server:
+  port: 8080
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      username: root
+      password: example
+      database: user_db
+      port: 27017
+      host: localhost
+# thymeleaf property
+  thymeleaf:
+    reactive:
+      max-chunk-size: 8192
+
+
+de:
+  flapdoodle:
+    mongodb:
+      embedded:
+        version: 4.0.2
+
+mongock:
+  #runner-type: "ApplicationRunner" # default
+  runner-type: "InitializingBean"
+  change-logs-scan-package:
+    - ru.otus.hw.mongock.changelog
+  #  - com.github.cloudyrock.mongock.integrationtests.spring5.springdata3.changelogs.client.initializer    -
+  mongo-db:
+    write-concern:
+      journal: true
+    read-concern: local
+
+
+logging:
+  level:
+    ROOT: ERROR
+    ru.otus.hw.controller: DEBUG
