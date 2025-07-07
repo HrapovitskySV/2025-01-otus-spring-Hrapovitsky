@@ -9,17 +9,23 @@ import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
 
 @Data
 @Entity
-@Table(name = "roles")
+@Table(name = "authorities")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Role {
+public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Стратегия генерации идентификаторов
     private long id;
 
     @Column(name = "name", nullable = false, unique = true)
     private String name;
+
+    @Override
+    public String getAuthority() {
+        return name;
+    }
 }

@@ -10,11 +10,13 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.FetchType;
+
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.Data;
 import lombok.ToString;
+import lombok.NoArgsConstructor;
+
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,9 +52,18 @@ public class CustomUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
+    @Fetch(FetchMode.SUBSELECT)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToMany(targetEntity = Authority.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "users_authorities",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    private List<Authority> authorities;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return roles;
+        return authorities;
     }
 
 }
