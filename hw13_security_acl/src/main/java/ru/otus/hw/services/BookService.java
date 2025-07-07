@@ -10,9 +10,7 @@ import java.util.Set;
 public interface BookService {
     Optional<Book> findById(long id);
 
-    List<Book> findAllBook();
-
-    List<BookDto> findAll();
+    List<Book> findAll();
 
     Book insert(String title, long authorId, Set<Long> genresIds);
 
@@ -21,8 +19,4 @@ public interface BookService {
     void deleteById(long id);
 
     Book save(Book book);
-
-    Book create(Book book);
-
-    void delete(Book book);
 }

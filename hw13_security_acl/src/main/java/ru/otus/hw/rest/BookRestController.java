@@ -17,6 +17,8 @@ import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceWrapperService;
+
 import java.util.List;
 
 @RestController
@@ -26,9 +28,13 @@ public class BookRestController {
 
     private final BookConverter bookConverter;
 
+    private final BookServiceWrapperService bookServiceWrapperService;
+
+
+
     @GetMapping("/api/books")
     public List<BookDtoWeb> listAllBooks() {
-        List<BookDto> books = bookService.findAll();
+        List<BookDto> books = bookServiceWrapperService.findAll();
         return books.stream().map(bookDto -> bookConverter.toDtoWeb(bookDto)).toList();
     }
 

@@ -33,13 +33,7 @@ public class BookServiceImpl implements BookService {
 
     private final BookRepository bookRepository;
 
-    private final BookConverter bookConverter;
-
     private final AclServiceWrapperService aclServiceWrapperService;
-
-    @Autowired
-    //делаю самоинжекцию, поэтому не через конструктор. Самоинжекция нужна, чтобы работали директивы через проксирование
-    private  BookService bookService;
 
     @Override
     @PostAuthorize("returnObject.isPresent() ? hasPermission(returnObject.get(), 'READ') : true")
@@ -48,20 +42,14 @@ public class BookServiceImpl implements BookService {
          return bookRepository.findById(id);
     }
 
+
     @Override
     @PostFilter("hasPermission(filterObject, 'READ')")
     @Transactional(readOnly = true)
-    public List<Book> findAllBook() {
+    public List<Book> findAll() {
         return bookRepository.findAll();
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<BookDto> findAll() {
-        var books = bookService.findAllBook();
-        return books.stream().map(bookConverter::toDto).toList();
-
-    }
 
     @Override
     @Transactional()
@@ -84,13 +72,6 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional()
-    @PreAuthorize("hasPermission(#book, 'DELETE')")
-    public void delete(@Param("book")Book book) {
-        bookRepository.delete(book);
-    }
-
-    @Override
-    @Transactional()
     @PreAuthorize("hasPermission(#id, Book.class, 'DELETE')")
     public void deleteById(@Param("id")long id) {
         bookRepository.deleteById(id);
@@ -103,11 +84,6 @@ public class BookServiceImpl implements BookService {
         return bookRepository.save(book);
     }
 
-
-    @Override
-    public Book create(@Param("book")Book book) {
-        return bookRepository.save(book);
-    }
 
     private Book save(long id, String title, long authorId, Set<Long> genresIds) {
         if (isEmpty(genresIds)) {
