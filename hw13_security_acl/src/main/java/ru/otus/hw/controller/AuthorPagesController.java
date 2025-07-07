@@ -27,7 +27,6 @@ public class AuthorPagesController {
         Author author = new Author();
         model.addAttribute("author", author);
         model.addAttribute("method", "POST");
-        //model.addAttribute("redirectUrl", "./");
         model.addAttribute("redirectUrl", "/authors/");
         return "authorEdit";
     }
@@ -39,7 +38,6 @@ public class AuthorPagesController {
         Author author = authorService.findById(id).orElseThrow(AuthorNotFoundException::new);
         model.addAttribute("author", author);
         model.addAttribute("method", "PUT");
-        //model.addAttribute("redirectUrl", "../");
         model.addAttribute("redirectUrl", "/authors/");
         return "authorEdit";
     }
