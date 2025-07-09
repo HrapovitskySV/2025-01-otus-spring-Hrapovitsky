@@ -20,6 +20,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -52,19 +53,13 @@ public class CustomUser implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private List<Role> roles;
 
-    @Fetch(FetchMode.SUBSELECT)
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @ManyToMany(targetEntity = Authority.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "users_authorities",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "authority_id"))
-    private List<Authority> authorities;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return authorities;
+        return roles.stream()
+                .map(r -> new SimpleGrantedAuthority("ROLE_" + r.getName()))
+                .toList();
     }
-
 }
 

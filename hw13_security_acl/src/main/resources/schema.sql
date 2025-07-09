@@ -113,15 +113,3 @@ create table users_roles (
     primary key (user_id, role_id)
 );
 
-create table authorities (
-    id bigserial,
-    name varchar(100),
-    primary key (id)
-);
-
-
-create table users_authorities (
-    user_id bigint references users(id) on delete cascade,
-    authority_id bigint references authorities(id) on delete cascade,
-    primary key (user_id, authority_id)
-);
