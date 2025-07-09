@@ -1,0 +1,39 @@
+2025-07-09 13:15:35,880 DEBUG o.s.w.f.GenericFilterBean [main] Filter 'webMvcObservationFilter' configured for use
+2025-07-09 13:15:35,885 DEBUG o.s.w.f.GenericFilterBean [main] Filter 'resourceUrlEncodingFilter' configured for use
+2025-07-09 13:15:38,270 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [main] 18 mappings in 'requestMappingHandlerMapping'
+2025-07-09 13:15:38,367 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [main] Patterns [/datarest/explorer/**] in 'resourceHandlerMapping'
+2025-07-09 13:15:38,405 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [main] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-07-09 13:15:38,437 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 3 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-07-09 13:15:38,574 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 3 @ExceptionHandler, 0 ResponseBodyAdvice
+2025-07-09 13:15:45,699 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Initializing Servlet 'dispatcherServlet'
+2025-07-09 13:15:45,700 DEBUG o.s.w.s.DispatcherServlet [http-nio-8080-exec-1] Detected StandardServletMultipartResolver
+2025-07-09 13:15:45,700 DEBUG o.s.w.s.DispatcherServlet [http-nio-8080-exec-1] Detected AcceptHeaderLocaleResolver
+2025-07-09 13:15:45,700 DEBUG o.s.w.s.DispatcherServlet [http-nio-8080-exec-1] Detected FixedThemeResolver
+2025-07-09 13:15:45,701 DEBUG o.s.w.s.DispatcherServlet [http-nio-8080-exec-1] Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@225fc6a2
+2025-07-09 13:15:45,702 DEBUG o.s.w.s.DispatcherServlet [http-nio-8080-exec-1] Detected org.springframework.web.servlet.support.SessionFlashMapManager@3a4ddaed
+2025-07-09 13:15:45,702 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2025-07-09 13:15:45,703 INFO o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed initialization in 2 ms
+2025-07-09 13:15:45,717 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-1] GET "/authors/edit/2", parameters={}
+2025-07-09 13:15:45,725 DEBUG o.s.w.s.h.AbstractHandlerMapping [http-nio-8080-exec-1] Mapped to ru.otus.hw.controller.AuthorPagesController#editPage(long, Model)
+2025-07-09 13:15:46,105 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-1] Completed 200 OK
+2025-07-09 13:15:50,224 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-2] PUT "/api/authors", parameters={}
+2025-07-09 13:15:50,225 DEBUG o.s.w.s.h.AbstractHandlerMapping [http-nio-8080-exec-2] Mapped to ru.otus.hw.rest.AuthorRestController#saveAuthor(Author)
+2025-07-09 13:15:50,235 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-3] GET "/authors/", parameters={}
+2025-07-09 13:15:50,237 DEBUG o.s.w.s.h.AbstractHandlerMapping [http-nio-8080-exec-3] Mapped to ru.otus.hw.controller.AuthorPagesController#listAuthorsPage()
+2025-07-09 13:15:50,248 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-3] Completed 200 OK
+2025-07-09 13:15:50,273 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-2] Read "application/json;charset=UTF-8" to [Author(id=2, fullName=Author_2222)]
+2025-07-09 13:15:52,928 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-4] GET "/listmark.png", parameters={}
+2025-07-09 13:15:52,930 WARN o.s.w.s.DispatcherServlet [http-nio-8080-exec-4] No mapping for GET /listmark.png
+2025-07-09 13:15:52,932 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [http-nio-8080-exec-4] Using @ExceptionHandler ru.otus.hw.controller.RestResponseEntityExceptionHandler#handleException(Exception, WebRequest)
+2025-07-09 13:15:52,950 DEBUG o.s.w.s.m.m.a.AbstractMessageConverterMethodProcessor [http-nio-8080-exec-4] Using 'application/problem+json;q=0.8', given [image/avif, image/webp, image/apng, image/svg+xml, image/*, */*;q=0.8] and supported [application/problem+json]
+2025-07-09 13:15:52,955 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-4] Writing [ProblemDetail[type='about:blank', title='Not Found', status=404, detail='No endpoint GET /listmark.p (truncated)...]
+2025-07-09 13:15:52,956 DEBUG o.s.w.s.m.m.a.AbstractMessageConverterMethodProcessor [http-nio-8080-exec-2] Using 'application/json', given [application/json] and supported [application/json, application/*+json]
+2025-07-09 13:15:52,956 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-2] Writing [Author(id=2, fullName=Author_2222)]
+2025-07-09 13:15:52,962 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-2] Completed 200 OK
+2025-07-09 13:15:52,962 DEBUG o.s.w.s.h.AbstractHandlerExceptionResolver [http-nio-8080-exec-4] Resolved [org.springframework.web.servlet.NoHandlerFoundException: No endpoint GET /listmark.png.]
+2025-07-09 13:15:52,963 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-4] Completed 404 NOT_FOUND
+2025-07-09 13:15:52,967 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-5] GET "/api/authors", parameters={}
+2025-07-09 13:15:52,968 DEBUG o.s.w.s.h.AbstractHandlerMapping [http-nio-8080-exec-5] Mapped to ru.otus.hw.rest.AuthorRestController#getAllAuthors()
+2025-07-09 13:15:53,008 DEBUG o.s.w.s.m.m.a.AbstractMessageConverterMethodProcessor [http-nio-8080-exec-5] Using 'application/json', given [application/json] and supported [application/json, application/*+json]
+2025-07-09 13:15:53,009 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-5] Writing [[Author(id=1, fullName=Author_1), Author(id=2, fullName=Author_2222), Author(id=3, fullName=Author_3 (truncated)...]
+2025-07-09 13:15:53,010 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-5] Completed 200 OK

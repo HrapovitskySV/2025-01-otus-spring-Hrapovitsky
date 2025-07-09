@@ -5,6 +5,8 @@ import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.actuate.endpoint.annotation.DeleteOperation;
 import org.springframework.boot.actuate.endpoint.annotation.ReadOperation;
 import org.springframework.boot.actuate.endpoint.annotation.WriteOperation;
@@ -33,6 +35,8 @@ public class AuthorRestController {
 
     private Counter countRestCalls;
 
+    Logger logger = LoggerFactory.getLogger(AuthorRestController.class);
+
     @PostConstruct
     public void initialize() {
         countRestCalls = Counter.builder("count_rest_calls_author").register(registry);
@@ -58,6 +62,7 @@ public class AuthorRestController {
     @WriteOperation
     public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
         countRestCalls.increment();
+        logger.info("Update Author by id: "+author.getId());
         Author savedAuthor = authorService.save(author);
         return ResponseEntity.ok(savedAuthor);
     }
@@ -68,6 +73,7 @@ public class AuthorRestController {
     public ResponseEntity<Author> insertAuthor(@RequestBody Author author) {
         countRestCalls.increment();
         Author savedAuthor = authorService.save(author);
+        logger.info("Write new Author");
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedAuthor);
     }
 
@@ -76,6 +82,7 @@ public class AuthorRestController {
     @DeleteOperation
     public ResponseEntity<String> deleteAuthor(@PathVariable("id") long id) {
         countRestCalls.increment();
+        logger.info("Delete Author by id: "+id);
         authorService.deleteById(id);
         return ResponseEntity.ok("");
     }
