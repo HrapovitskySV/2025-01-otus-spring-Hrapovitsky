@@ -37,3 +37,10 @@
 2025-07-09 13:15:53,008 DEBUG o.s.w.s.m.m.a.AbstractMessageConverterMethodProcessor [http-nio-8080-exec-5] Using 'application/json', given [application/json] and supported [application/json, application/*+json]
 2025-07-09 13:15:53,009 DEBUG o.s.c.l.LogFormatUtils [http-nio-8080-exec-5] Writing [[Author(id=1, fullName=Author_1), Author(id=2, fullName=Author_2222), Author(id=3, fullName=Author_3 (truncated)...]
 2025-07-09 13:15:53,010 DEBUG o.s.w.s.FrameworkServlet [http-nio-8080-exec-5] Completed 200 OK
+2025-07-09 13:18:31,593 DEBUG o.s.w.f.GenericFilterBean [main] Filter 'webMvcObservationFilter' configured for use
+2025-07-09 13:18:31,597 DEBUG o.s.w.f.GenericFilterBean [main] Filter 'resourceUrlEncodingFilter' configured for use
+2025-07-09 13:18:33,864 DEBUG o.s.w.s.h.AbstractHandlerMethodMapping [main] 18 mappings in 'requestMappingHandlerMapping'
+2025-07-09 13:18:33,957 DEBUG o.s.w.s.h.SimpleUrlHandlerMapping [main] Patterns [/datarest/explorer/**] in 'resourceHandlerMapping'
+2025-07-09 13:18:33,994 DEBUG o.s.w.s.m.m.a.RequestMappingHandlerAdapter [main] ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2025-07-09 13:18:34,025 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 3 @ExceptionHandler, 1 ResponseBodyAdvice
+2025-07-09 13:18:34,148 DEBUG o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver [main] ControllerAdvice beans: 3 @ExceptionHandler, 0 ResponseBodyAdvice

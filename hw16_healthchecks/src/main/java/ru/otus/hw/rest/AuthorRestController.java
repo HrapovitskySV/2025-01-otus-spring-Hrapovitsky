@@ -30,12 +30,12 @@ import java.util.List;
 public class AuthorRestController {
     private final AuthorService authorService;
 
-
     private final MeterRegistry registry;
+
+    private Logger logger = LoggerFactory.getLogger(AuthorRestController.class);
 
     private Counter countRestCalls;
 
-    Logger logger = LoggerFactory.getLogger(AuthorRestController.class);
 
     @PostConstruct
     public void initialize() {
@@ -62,7 +62,7 @@ public class AuthorRestController {
     @WriteOperation
     public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
         countRestCalls.increment();
-        logger.info("Update Author by id: "+author.getId());
+        logger.info("Update Author by id: " + author.getId());
         Author savedAuthor = authorService.save(author);
         return ResponseEntity.ok(savedAuthor);
     }
@@ -82,7 +82,7 @@ public class AuthorRestController {
     @DeleteOperation
     public ResponseEntity<String> deleteAuthor(@PathVariable("id") long id) {
         countRestCalls.increment();
-        logger.info("Delete Author by id: "+id);
+        logger.info("Delete Author by id: " + id);
         authorService.deleteById(id);
         return ResponseEntity.ok("");
     }
