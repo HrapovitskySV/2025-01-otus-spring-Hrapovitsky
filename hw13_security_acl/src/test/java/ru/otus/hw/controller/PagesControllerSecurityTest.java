@@ -18,6 +18,7 @@ import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceWrapperService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.Map;
@@ -38,6 +39,9 @@ class PagesControllerSecurityTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private BookServiceWrapperService bookServiceWrapperService;
 
     @MockBean
     private AuthorService authorService;

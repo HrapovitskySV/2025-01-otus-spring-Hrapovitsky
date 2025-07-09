@@ -9,8 +9,9 @@ import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.Genre;
+import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.services.AuthorService;
-import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceWrapperService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookPagesController {
 
-    private final BookService bookService;
+    private final BookServiceWrapperService bookServiceWrapperService;
 
     private final AuthorService authorService;
 
@@ -33,7 +34,7 @@ public class BookPagesController {
 
     @GetMapping("/edit/{id}")
     public String editPage(@PathVariable("id") long id, Model model) {
-        Book book = bookService.findById(id).orElseThrow(BookNotFoundException::new);
+        BookDto book = bookServiceWrapperService.findById(id).orElseThrow(BookNotFoundException::new);
         model.addAttribute("book", book);
         List<Author> authors = authorService.findAll();
         model.addAttribute("authors", authors);

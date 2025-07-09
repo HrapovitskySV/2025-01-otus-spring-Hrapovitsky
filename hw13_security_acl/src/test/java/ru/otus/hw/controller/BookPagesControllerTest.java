@@ -12,9 +12,9 @@ import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.converters.GenreConverter;
 import ru.otus.hw.exceptions.BookNotFoundException;
 import ru.otus.hw.models.*;
-import ru.otus.hw.services.AuthorService;
-import ru.otus.hw.services.BookService;
-import ru.otus.hw.services.GenreService;
+import ru.otus.hw.models.dto.BookDto;
+import ru.otus.hw.models.dto.GenreDto;
+import ru.otus.hw.services.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +26,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 
 @WebMvcTest(value = BookPagesController.class, excludeAutoConfiguration = SecurityAutoConfiguration.class)// отключаю  Security в функциональных тестах
-@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class})//, AuthorService.class, GenreService.class
+@Import({BookConverter.class, AuthorConverter.class, GenreConverter.class, BookConverter.class})//, AuthorService.class, GenreService.class
 class BookPagesControllerTest {
 
     @Autowired
     private MockMvc mvc;
+
+    @MockBean
+    private BookServiceWrapperService bookServiceWrapperService;
 
     @MockBean
     private BookService bookService;
@@ -42,8 +45,8 @@ class BookPagesControllerTest {
     private GenreService genreService;
 
 
-    private final List<Book> books = List.of(new Book(1L, "Book1",null, new ArrayList<Genre>()),
-            new Book(2L, "Book1", null,new ArrayList<Genre>()));
+    private final List<BookDto> books = List.of(new BookDto(1L, "Book1",null, new ArrayList<GenreDto>()),
+            new BookDto(2L, "Book1", null,new ArrayList<GenreDto>()));
 
 
 
@@ -55,11 +58,9 @@ class BookPagesControllerTest {
 
     @Test
     void editPage() throws Exception {
-        Book book = books.get(0);
-        when(authorService.findAll()).thenReturn(new ArrayList<Author>());
-        when(genreService.findAll()).thenReturn(new ArrayList<Genre>());
+        BookDto book = books.get(0);
 
-        when(bookService.findById(1L)).thenReturn(Optional.of(book));
+        when(bookServiceWrapperService.findById(1L)).thenReturn(Optional.of(book));
         mvc.perform(get("/edit/1"))
             .andExpect(view().name("bookEdit"))
             .andExpect(model().attribute("book", book));

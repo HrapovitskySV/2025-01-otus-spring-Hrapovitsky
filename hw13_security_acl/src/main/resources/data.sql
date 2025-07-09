@@ -22,7 +22,7 @@ INSERT INTO users(id, Username, Password)
   VALUES (1, 'USER', '$2a$12$3xhExkLmROmGyfVAAFq16.UWFVJx3qEUBK9Lxe1Is.X3geAs9ttvC'), (2, 'ADMIN','$2a$12$3xhExkLmROmGyfVAAFq16.UWFVJx3qEUBK9Lxe1Is.X3geAs9ttvC');
 
 INSERT INTO roles(id, name)
-  VALUES (1, 'ROLE_USER'), (2, 'ROLE_ADMIN');
+  VALUES (1, 'USER'), (2, 'ADMIN');
 
 insert into users_roles(user_id, role_id)
 values (1, 1), (2, 2);

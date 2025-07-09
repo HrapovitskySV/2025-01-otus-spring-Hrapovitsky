@@ -29,6 +29,9 @@ class BookServiceImplSecTest {
     private BookService bookService;
 
     @MockBean
+    private BookServiceWrapperService bookServiceWrapperService;
+
+    @MockBean
     private AclServiceWrapperService aclServiceWrapperService;
 
 

@@ -29,6 +29,7 @@ import ru.otus.hw.models.Book;
 import ru.otus.hw.security.SecurityConfiguration;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceWrapperService;
 
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,9 @@ class RestControllerSecurityTest {
 
     @MockBean
     private BookService bookService;
+
+    @MockBean
+    private BookServiceWrapperService bookServiceWrapperService;
 
     @MockBean
     private AuthorService authorService;

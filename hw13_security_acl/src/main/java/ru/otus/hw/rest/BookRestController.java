@@ -12,11 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
-import ru.otus.hw.models.Book;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
-import ru.otus.hw.services.BookService;
 import ru.otus.hw.services.BookServiceWrapperService;
 
 import java.util.List;
@@ -24,7 +22,6 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 public class BookRestController {
-    private final BookService bookService;
 
     private final BookConverter bookConverter;
 
@@ -39,13 +36,13 @@ public class BookRestController {
     }
 
     @GetMapping("/api/books/{id}")
-    public Book getBook(@PathVariable("id") long id) {
-        return bookService.findById(id).orElseThrow(AuthorNotFoundException::new);
+    public BookDto getBook(@PathVariable("id") long id) {
+        return bookServiceWrapperService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
     @PutMapping("/api/books")
     public ResponseEntity<String> saveBook(@RequestBody BookDtoInputWeb bookDto) {
-        Book savedBook = bookService.update(
+        BookDto savedBook = bookServiceWrapperService.update(
                 bookDto.getId(),
                 bookDto.getTitle(),
                 bookDto.getAuthor(),
@@ -54,14 +51,16 @@ public class BookRestController {
     }
 
     @PostMapping("/api/books")
-    public ResponseEntity<Book> insertBook(@RequestBody BookDtoInputWeb bookDto) {
-        Book savedBook = bookService.insert(bookDto.getTitle(), bookDto.getAuthor(), bookDto.getGenres());
+    public ResponseEntity<BookDto> insertBook(@RequestBody BookDtoInputWeb bookDto) {
+        BookDto savedBook = bookServiceWrapperService.insert(bookDto.getTitle(),
+                                                                bookDto.getAuthor(),
+                                                                bookDto.getGenres());
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedBook);
     }
 
     @DeleteMapping("/api/books/{id}")
     public ResponseEntity<String> deletePage(@PathVariable("id") long id) {
-        bookService.deleteById(id);
+        bookServiceWrapperService.deleteById(id);
         return ResponseEntity.ok("deleted");
     }
 }

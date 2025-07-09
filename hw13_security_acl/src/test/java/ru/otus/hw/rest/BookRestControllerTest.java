@@ -18,6 +18,7 @@ import ru.otus.hw.models.dto.BookDtoInputWeb;
 import ru.otus.hw.models.dto.BookDtoWeb;
 import ru.otus.hw.services.AuthorService;
 import ru.otus.hw.services.BookService;
+import ru.otus.hw.services.BookServiceWrapperService;
 import ru.otus.hw.services.GenreService;
 
 import java.util.*;
@@ -39,7 +40,7 @@ class BookRestControllerTest {
     private MockMvc mvc;
 
     @MockBean
-    private BookService bookService;
+    private BookServiceWrapperService bookService;
 
     @MockBean
     private AuthorService authorService;
@@ -72,20 +73,22 @@ class BookRestControllerTest {
     @Test
     void getBookTest() throws Exception {
         var book = books.get(0);
-        when(bookService.findById(1L)).thenReturn(Optional.of(book));
+        var bookDto = bookConverter.toDto(book);
+        when(bookService.findById(1L)).thenReturn(Optional.of(bookDto));
         mvc.perform(get("/api/books/1"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(mapper.writeValueAsString(book)));
+                .andExpect(content().json(mapper.writeValueAsString(bookDto)));
     }
 
     @Test
     void shouldCorrectSaveNewBook() throws Exception {
         Book book =  new Book(3L, "Book3", null,new ArrayList<Genre>());
+        var bookDto = bookConverter.toDto(book);
         BookDtoInputWeb bookDtoInputWeb =  new BookDtoInputWeb(3L, "Book3", 0,new HashSet<Long>());
         String bookDtoInputWebString = mapper.writeValueAsString(bookDtoInputWeb);
 
-        given(bookService.insert(anyString(),anyLong(),anySet())).willReturn(book);
-        String expectedResult = mapper.writeValueAsString(book);
+        given(bookService.insert(anyString(),anyLong(),anySet())).willReturn(bookDto);
+        String expectedResult = mapper.writeValueAsString(bookDto);
 
         mvc.perform(post("/api/books").contentType(APPLICATION_JSON)
                         .content(bookDtoInputWebString))

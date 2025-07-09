@@ -19,12 +19,12 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @DisplayName("Сервис для работы с книгами ")
 @DataJpaTest(excludeAutoConfiguration = SecurityAutoConfiguration.class)
-@Import({BookServiceImpl.class, BookConverter.class, AuthorConverter.class, GenreConverter.class})//, AclServiceWrapperService.class
+@Import({BookServiceImpl.class, BookServiceWrapperServiceImpl.class, BookConverter.class, AuthorConverter.class, GenreConverter.class})//, AclServiceWrapperService.class
 @Transactional(propagation = Propagation.NEVER)
-class BookServiceImplTest {
+class BookServiceWrapperServiceTest {
 
     @Autowired
-    private BookService bookService;
+    private BookServiceWrapperService bookService;
 
     @MockBean
     private AclServiceWrapperService aclServiceWrapperService;
