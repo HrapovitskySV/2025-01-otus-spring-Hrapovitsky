@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres17:5432/db
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=secret
+    depends_on:
+      - postgres17
+
+  postgres17:
+    image: "postgres:17.2"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=secret
+      - POSTGRES_DB=db
+    ports:
+      - "5434:5432"
+    hostname: postgres17
+
+  pg_admin:
+    #https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html
+    image: dpage/pgadmin4
+    restart: always
+    environment:
+      #PGADMIN_DEFAULT_EMAIL Это адрес электронной почты, используемый при настройке начальной учетной записи администратора для входа в pgAdmin. Эта переменная обязательна и должна быть установлена во время запуска.
+      - PGADMIN_DEFAULT_EMAIL=java@mail.ru
+
+      #PGADMIN_DEFAULT_PASSWORD   Это пароль, используемый при настройке начальной учетной записи администратора для входа в pgAdmin. Эта переменная обязательна и должна быть установлена во время запуска.
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+      #- POSTGRES_DB=stage
+    #volumes:
+    # - ./pgadmin:/var/lib/pgadmin
+    expose:
+      - 80
+    ports:
+      - 8081:80

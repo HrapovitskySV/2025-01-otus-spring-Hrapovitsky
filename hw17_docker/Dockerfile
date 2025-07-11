@@ -15,6 +15,7 @@ FROM openjdk:17-jdk
 ENV PROJECT_DIR=/opt/project
 RUN mkdir -p $PROJECT_DIR
 WORKDIR $PROJECT_DIR
-COPY --from=builder $PROJECT_DIR/target/library* $PROJECT_DIR/
+COPY --from=builder $PROJECT_DIR/target/hw17-docker* $PROJECT_DIR/
+RUN groupadd -r postgres && useradd --no-log-init -r -g postgres postgres
 EXPOSE 8080
-CMD ["java", "-jar", "/opt/project/library-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "/opt/project/hw17-docker-0.0.1-SNAPSHOT.jar"]

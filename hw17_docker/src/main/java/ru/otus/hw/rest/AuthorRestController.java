@@ -1,9 +1,6 @@
 package ru.otus.hw.rest;
 
 import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.Counter;
-import io.micrometer.core.instrument.MeterRegistry;
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,22 +27,13 @@ import java.util.List;
 public class AuthorRestController {
     private final AuthorService authorService;
 
-    private final MeterRegistry registry;
 
     private Logger logger = LoggerFactory.getLogger(AuthorRestController.class);
 
-    private Counter countRestCalls;
-
-
-    @PostConstruct
-    public void initialize() {
-        countRestCalls = Counter.builder("count_rest_calls_author").register(registry);
-    }
 
     @GetMapping("/api/authors")
     @ReadOperation
     public List<Author> getAllAuthors() {
-        countRestCalls.increment();
         return authorService.findAll();
     }
 
@@ -53,7 +41,6 @@ public class AuthorRestController {
     @Timed
     @ReadOperation
     public Author getAuthor(@PathVariable("id") long id) {
-        countRestCalls.increment();
         return authorService.findById(id).orElseThrow(AuthorNotFoundException::new);
     }
 
@@ -61,7 +48,6 @@ public class AuthorRestController {
     @Timed
     @WriteOperation
     public ResponseEntity<Author> saveAuthor(@RequestBody Author author) {
-        countRestCalls.increment();
         logger.info("Update Author by id: " + author.getId());
         Author savedAuthor = authorService.save(author);
         return ResponseEntity.ok(savedAuthor);
@@ -71,7 +57,6 @@ public class AuthorRestController {
     @Timed
     @WriteOperation
     public ResponseEntity<Author> insertAuthor(@RequestBody Author author) {
-        countRestCalls.increment();
         Author savedAuthor = authorService.save(author);
         logger.info("Write new Author");
         return ResponseEntity.status(HttpStatusCode.valueOf(201)).body(savedAuthor);
@@ -81,7 +66,6 @@ public class AuthorRestController {
     @Timed
     @DeleteOperation
     public ResponseEntity<String> deleteAuthor(@PathVariable("id") long id) {
-        countRestCalls.increment();
         logger.info("Delete Author by id: " + id);
         authorService.deleteById(id);
         return ResponseEntity.ok("");
