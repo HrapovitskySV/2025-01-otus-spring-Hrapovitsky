@@ -1,0 +1,55 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:maindb
+  sql:
+    init:
+      mode: always
+      #data-locations: data.sql
+      #schema-locations: schema.sql
+  jmx:
+    enabled: true
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    open-in-view: false
+    generate-ddl: false
+
+    show-sql: true
+  data:
+    rest:
+      basePath: /datarest
+
+#настройки actuator
+management:
+  endpoints:
+    web:
+      #base-path: /actuator
+      exposure:
+        include: "*"
+
+
+    enabled-by-default: true
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+    diskspace:
+      enabled: true
+
+logging:
+  #logback:
+  #  rollingpolicy:
+  #    file-name-pattern: "app-%d{yyyy-MM-dd}.log."
+  file:
+    name: logs/application-debug.log
+    #path: logs
+  pattern:
+    console: "%d %-5level %logger : %msg%n"
+    file: "%d %-5level [%thread] %logger : %msg%n"
+  level:
+    ROOT: ERROR
+    ru.otus.hw.controller: "debug"
+    org.springframework.web: "debug"
