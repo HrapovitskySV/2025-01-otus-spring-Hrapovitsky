@@ -10,7 +10,7 @@ spring:
     init:
       mode: always
       #data-locations: data.sql
-      #schema-locations: schema.sql
+      #schema-locations: schema_del.sql
   jmx:
     enabled: true
 
@@ -48,12 +48,12 @@ logging:
   #logback:
   #  rollingpolicy:
   #    file-name-pattern: "app-%d{yyyy-MM-dd}.log."
-  file:
-    name: logs/application-debug.log
+  #file:
+  #  name: logs/application-debug.log
     #path: logs
   pattern:
     console: "%d %-5level %logger : %msg%n"
-    file: "%d %-5level [%thread] %logger : %msg%n"
+  #  file: "%d %-5level [%thread] %logger : %msg%n"
   level:
     ROOT: ERROR
     ru.otus.hw.controller: "debug"
