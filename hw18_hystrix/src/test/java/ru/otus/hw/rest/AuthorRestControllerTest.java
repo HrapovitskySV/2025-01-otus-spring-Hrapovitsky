@@ -61,7 +61,7 @@ class AuthorRestControllerTest {
 
         mvc.perform(post("/api/authors").contentType(APPLICATION_JSON)
                         .content(expectedResult))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(content().json(expectedResult));
 
     }
