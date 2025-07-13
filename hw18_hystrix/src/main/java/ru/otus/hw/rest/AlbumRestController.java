@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.models.Album;
 import ru.otus.hw.restClients.AlbumClient;
-import ru.otus.hw.restClients.CBRClient;
 
 import java.util.List;
 

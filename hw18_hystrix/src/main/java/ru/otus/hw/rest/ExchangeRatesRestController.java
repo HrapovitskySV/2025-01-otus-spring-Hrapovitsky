@@ -1,7 +1,8 @@
 package ru.otus.hw.rest;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.GetMapping;
 import ru.otus.hw.restClients.CBRClient;
 
 @RestController
