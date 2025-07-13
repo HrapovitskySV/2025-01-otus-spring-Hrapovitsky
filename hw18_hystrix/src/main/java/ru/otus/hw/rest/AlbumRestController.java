@@ -17,8 +17,7 @@ public class AlbumRestController {
 
     @GetMapping(value = "/api/albums")
     public List<Album> getAlbums() {
-        var r = albumClient.getAlbums();
-        return r;
+        return albumClient.getAlbums();
     }
 
     @GetMapping(value = "/api/albums/{id}")
