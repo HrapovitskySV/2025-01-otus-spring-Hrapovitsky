@@ -15,8 +15,22 @@ spring:
 
     show-sql: true
 
+  cloud:
+    compatibility-verifier:
+      enabled: false
+
 server:
   port: 8084
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: basic
+  hystrix:
+    enabled: true
 
 logging:
   level:
