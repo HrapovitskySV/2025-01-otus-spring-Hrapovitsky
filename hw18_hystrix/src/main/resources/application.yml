@@ -20,7 +20,7 @@ spring:
       enabled: false
 
 server:
-  port: 8084
+  port: 8080
 
 feign:
   client:
