@@ -1,14 +1,24 @@
+DROP TABLE IF EXISTS comments;
+DROP TABLE IF EXISTS books_genres;
+DROP TABLE IF EXISTS books;
+DROP TABLE IF EXISTS authors;
+DROP TABLE IF EXISTS genres;
+
 create table authors (
     id bigserial,
     full_name varchar(255),
     primary key (id)
 );
 
+
+
 create table genres (
     id bigserial,
     name varchar(255),
     primary key (id)
 );
+
+
 
 create table books (
     id bigserial,
@@ -17,11 +27,13 @@ create table books (
     primary key (id)
 );
 
+
 create table books_genres (
     book_id bigint references books(id) on delete cascade,
     genre_id bigint references genres(id) on delete cascade,
     primary key (book_id, genre_id)
 );
+
 
 create table comments (
     id bigserial,

@@ -10,7 +10,7 @@ spring:
     init:
       mode: always
       #data-locations: data.sql
-      #schema-locations: schema_del.sql
+      #schema-locations: schema.sql
   jmx:
     enabled: true
 
@@ -18,7 +18,7 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
-    generate-ddl: true
+    generate-ddl: false
 
     show-sql: true
   data:
@@ -43,6 +43,9 @@ management:
       enabled: true
     diskspace:
       enabled: true
+
+server:
+  port: 8080
 
 logging:
   #logback:
