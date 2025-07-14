@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.otus.hw.models.Album;
 import ru.otus.hw.restClients.ExternalAPICaller;
 
-import java.util.List;
-
 @RestController
 @RequiredArgsConstructor
 public class AlbumRestController {

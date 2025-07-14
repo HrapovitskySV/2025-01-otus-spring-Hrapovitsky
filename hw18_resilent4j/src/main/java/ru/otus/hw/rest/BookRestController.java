@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestBody;
 import ru.otus.hw.converters.BookConverter;
 import ru.otus.hw.exceptions.AuthorNotFoundException;
-import ru.otus.hw.models.Author;
 import ru.otus.hw.models.Book;
 import ru.otus.hw.models.dto.BookDto;
 import ru.otus.hw.models.dto.BookDtoInputWeb;
