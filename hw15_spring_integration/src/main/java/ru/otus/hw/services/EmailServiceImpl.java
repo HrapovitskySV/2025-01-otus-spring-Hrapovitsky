@@ -7,7 +7,6 @@ import ru.otus.hw.models.Email;
 import ru.otus.hw.models.Order;
 
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -42,24 +41,20 @@ public class EmailServiceImpl implements EmailService {
         ForkJoinPool pool = ForkJoinPool.commonPool();
         for (int i = 0; i < 10; i++) {
             int num = i + 1;
-            //pool.execute(() -> {
-                Email email = getEmailMessage(i);
+            pool.execute(() -> {
+                Email email = getEmailMessage(num - 1);
                 log.info("{}, New email: {}", num, email.getMessage());
                 Order order = incomingCorrespondence.process(email);
                 if (!isNull(order)) {
                     log.info("{}, Ready order: {}", num, order.getOrderId());
                 }
-            //});
+            });
         }
     }
 
 
     public Email getEmailMessage(int i) {
-        //Random rand = new Random();
-        //return emails.get(rand.nextInt(emails.size()));
-
-        var email= emails.get(i);
-        email.getMessage().split("\\s*,\\s*")
+        return emails.get(i);
     }
 
     public void info(Email email) {

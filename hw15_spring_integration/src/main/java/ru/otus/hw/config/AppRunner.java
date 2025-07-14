@@ -12,7 +12,8 @@ import ru.otus.hw.services.EmailService;
 @Component
 @RequiredArgsConstructor
 public class AppRunner implements CommandLineRunner {
-	final EmailService emailService;
+
+	private final EmailService emailService;
 
 	@Override
 	public void run(String... args) {
